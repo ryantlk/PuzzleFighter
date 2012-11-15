@@ -1,5 +1,6 @@
 package cs447.PuzzleFighter;
 
+import jig.engine.RenderingContext;
 import jig.engine.util.Vector2D;
 
 public class GemPair {
@@ -29,5 +30,10 @@ public class GemPair {
 		pos2 = newPos2;
 
 		return true;
+	}
+
+	public void render(RenderingContext rc) {
+		gem1.render(rc, pos1);
+		gem2.render(rc, pos2);
 	}
 }

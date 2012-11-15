@@ -1,5 +1,6 @@
 package cs447.PuzzleFighter;
 
+import jig.engine.RenderingContext;
 import jig.engine.util.Vector2D;
 
 public class PlayField {
@@ -14,11 +15,25 @@ public class PlayField {
 	private Gem[][] grid;
 	private GemPair cursor;
 
+	private long timer;
+
 	public PlayField(int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.grid = new Gem[height][width];
 		this.cursor = new GemPair(width/2, 0, this);
+	}
+
+	public void render(RenderingContext rc) {
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				Gem g = grid[y][x];
+				if (g != null) {
+					g.render(rc, new Vector2D(x, y));
+				}
+			}
+		}
+		cursor.render(rc);
 	}
 
 	public Gem ref(Vector2D pos) {
@@ -57,29 +72,11 @@ public class PlayField {
 		cursor = new GemPair(width/2, 0, this);
 	}
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder(height * (width + 3));
-		int x1 = (int) cursor.pos1.getX();
-		int y1 = (int) cursor.pos1.getY();
-		int x2 = (int) cursor.pos2.getX();
-		int y2 = (int) cursor.pos2.getY();
-
-		for (int y = 0; y < height; y++) {
-			sb.append('|');
-			for (int x = 0; x < width; x++) {
-				if (grid[y][x] != null) {
-					sb.append('g');
-				}
-				else if ( (y == y1 && x == x1) || (y == y2 && x == x2) ) {
-					sb.append('G');
-				}
-				else {
-					sb.append(' ');
-				}
-			}
-			sb.append('|');
-			sb.append('\n');
+	public void update(long deltaMs) {
+		timer += deltaMs;
+		if (timer > 500) {
+			timer = 0;
+			step();
 		}
-		return sb.toString();
 	}
 }
