@@ -1,7 +1,6 @@
 package cs447.PuzzleFighter;
 
 import java.awt.Color;
-import java.awt.event.KeyEvent;
 
 import jig.engine.PaintableCanvas;
 import jig.engine.RenderingContext;

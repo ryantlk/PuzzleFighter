@@ -82,9 +82,21 @@ public class PlayField {
 
 		if (inputTimer > 100) {
 			inputTimer = 0;
-			boolean left = keyboard.isPressed(KeyEvent.VK_LEFT);
-			boolean right = keyboard.isPressed(KeyEvent.VK_RIGHT);
+			boolean ccw = keyboard.isPressed(KeyEvent.VK_Q);
+			boolean cw = keyboard.isPressed(KeyEvent.VK_E);
+			boolean left = keyboard.isPressed(KeyEvent.VK_A);
+			boolean right = keyboard.isPressed(KeyEvent.VK_D);
+			boolean down = keyboard.isPressed(KeyEvent.VK_S);
 
+			if (ccw && !cw) {
+				cursor.rotateCounterClockwise();
+			}
+			if (cw && !ccw) {
+				cursor.rotateClockwise();
+			}
+			if (down) {
+				move(PlayField.DOWN);
+			}
 			if (left && !right) {
 				move(PlayField.LEFT);
 			}

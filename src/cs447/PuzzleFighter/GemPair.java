@@ -12,9 +12,9 @@ public class GemPair {
 
 	public GemPair(int x, int y, PlayField pf) {
 		this.gem1 = new Gem(GemType.GEM);
-		this.gem2 = new Gem(GemType.GEM);
+		this.gem2 = new Gem(GemType.GEM, "greenGem");
 		this.pos1 = new Vector2D(x, y);
-		this.pos2 = new Vector2D(x, y+1);
+		this.pos2 = new Vector2D(x, y-1);
 		this.pf = pf;
 	}
 
@@ -30,6 +30,24 @@ public class GemPair {
 		pos2 = newPos2;
 
 		return true;
+	}
+
+	public void rotateClockwise() {
+		Vector2D newPos2 = pos2.translate(pos1.scale(-1));
+		newPos2 = new Vector2D(-newPos2.getY(), newPos2.getX());
+		newPos2 = newPos2.translate(pos1);
+		if (!pf.isFilled(newPos2)) {
+			pos2 = newPos2;
+		}
+	}
+
+	public void rotateCounterClockwise() {
+		Vector2D newPos2 = pos2.translate(pos1.scale(-1));
+		newPos2 = new Vector2D(newPos2.getY(), -newPos2.getX());
+		newPos2 = newPos2.translate(pos1);
+		if (!pf.isFilled(newPos2)) {
+			pos2 = newPos2;
+		}
 	}
 
 	public void render(RenderingContext rc) {

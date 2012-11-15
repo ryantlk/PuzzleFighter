@@ -8,7 +8,11 @@ public class Gem extends Sprite {
 	public GemType type;
 
 	public Gem(GemType type) {
-		super("redGem");
+		this(type, "redGem");
+	}
+
+	public Gem(GemType type, String resource) {
+		super(resource);
 		this.type = type;
 	}
 
