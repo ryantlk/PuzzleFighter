@@ -70,9 +70,22 @@ public class PlayField {
 			return;
 		}
 
-		// TODO: gravity stuff
 		addGem(cursor.pos1, cursor.gem1);
 		addGem(cursor.pos2, cursor.gem2);
+
+		for (int y = height-1; y >= 0; y--) {
+			for (int x = 0; x < width; x++) {
+				if (grid[y][x] != null) {
+					Gem g = grid[y][x];
+					grid[y][x] = null;
+					int yBot = y;
+					while (yBot < height && grid[yBot][x] == null) {
+						yBot++;
+					}
+					grid[yBot-1][x] = g;
+				}
+			}
+		}
 		cursor = new GemPair(width/2, 0, this);
 	}
 
