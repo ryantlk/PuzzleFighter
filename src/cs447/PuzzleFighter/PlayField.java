@@ -1,5 +1,8 @@
 package cs447.PuzzleFighter;
 
+import java.awt.event.KeyEvent;
+
+import jig.engine.Keyboard;
 import jig.engine.RenderingContext;
 import jig.engine.util.Vector2D;
 
@@ -15,7 +18,8 @@ public class PlayField {
 	private Gem[][] grid;
 	private GemPair cursor;
 
-	private long timer;
+	private long inputTimer = 0;
+	private long renderTimer = 0;
 
 	public PlayField(int width, int height) {
 		this.width = width;
@@ -72,10 +76,26 @@ public class PlayField {
 		cursor = new GemPair(width/2, 0, this);
 	}
 
-	public void update(long deltaMs) {
-		timer += deltaMs;
-		if (timer > 500) {
-			timer = 0;
+	public void update(long deltaMs, Keyboard keyboard) {
+		renderTimer += deltaMs;
+		inputTimer += deltaMs;
+
+		if (inputTimer > 100) {
+			inputTimer = 0;
+			boolean left = keyboard.isPressed(KeyEvent.VK_LEFT);
+			boolean right = keyboard.isPressed(KeyEvent.VK_RIGHT);
+
+			if (left && !right) {
+				move(PlayField.LEFT);
+			}
+			if (right && !left) {
+				move(PlayField.RIGHT);
+			}
+
+		}
+
+		if (renderTimer > 500) {
+			renderTimer = 0;
 			step();
 		}
 	}
