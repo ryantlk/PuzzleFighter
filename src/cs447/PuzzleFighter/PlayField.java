@@ -11,7 +11,7 @@ public class PlayField {
 	public static final Vector2D  DOWN = new Vector2D( 0, +1);
 	public static final Vector2D  LEFT = new Vector2D(-1,  0);
 	public static final Vector2D RIGHT = new Vector2D(+1,  0);
-	public static final Gem WALL = new Gem(GemType.WALL);
+	public static final Gem WALL = new Gem(null, null, GemType.WALL);
 
 	private int width;
 	private int height;
@@ -33,7 +33,7 @@ public class PlayField {
 			for (int x = 0; x < width; x++) {
 				Gem g = grid[y][x];
 				if (g != null) {
-					g.render(rc, new Vector2D(x, y));
+					g.render(rc);
 				}
 			}
 		}
@@ -50,11 +50,15 @@ public class PlayField {
 		return grid[y][x];
 	}
 
-	public void addGem(Vector2D pos, Gem g) {
+	public void set(Vector2D pos, Gem g) {
 		int x = (int) pos.getX();
 		int y = (int) pos.getY();
 
 		grid[y][x] = g;
+	}
+
+	public void clear(Vector2D pos) {
+		set(pos, null);
 	}
 
 	public boolean isFilled(Vector2D pos) {
@@ -70,19 +74,12 @@ public class PlayField {
 			return;
 		}
 
-		addGem(cursor.pos1, cursor.gem1);
-		addGem(cursor.pos2, cursor.gem2);
-
 		for (int y = height-1; y >= 0; y--) {
 			for (int x = 0; x < width; x++) {
 				if (grid[y][x] != null) {
 					Gem g = grid[y][x];
-					grid[y][x] = null;
-					int yBot = y;
-					while (yBot < height && grid[yBot][x] == null) {
-						yBot++;
-					}
-					grid[yBot-1][x] = g;
+					while (g.move(DOWN))
+						;
 				}
 			}
 		}
