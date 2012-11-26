@@ -1,5 +1,7 @@
 package cs447.PuzzleFighter;
 
+import java.awt.geom.AffineTransform;
+
 import jig.engine.RenderingContext;
 import jig.engine.Sprite;
 import jig.engine.util.Vector2D;
@@ -29,12 +31,10 @@ public class Gem extends Sprite {
 	}
 
 	public void render(RenderingContext rc) {
-		for (int dx = 0; dx < gemWidth; dx++) {
-			for (int dy = 0; dy < gemHeight; dy++) {
-				position = pos.translate(new Vector2D(dx, dy)).scale(new Vector2D(25, 25));
-				super.render(rc);
-			}
-		}
+		position = pos.scale(new Vector2D(25, 25));
+		AffineTransform t = AffineTransform.getTranslateInstance(position.getX(), position.getY());
+		t.scale(gemWidth, gemHeight);
+		super.render(rc, t);
 	}
 
 	public void crash() {
