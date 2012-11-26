@@ -8,6 +8,7 @@ public class Gem extends Sprite {
 	private PlayField pf;
 
 	public GemType type;
+	public Color color;
 	public Vector2D pos;
 
 	public int gemWidth;
@@ -22,6 +23,7 @@ public class Gem extends Sprite {
 		this.pf = pf;
 		this.pos = pos;
 		this.type = type;
+		this.color = gemColor(resource);
 		gemWidth = 1;
 		gemHeight = 1;
 	}
@@ -31,6 +33,38 @@ public class Gem extends Sprite {
 			for (int dy = 0; dy < gemHeight; dy++) {
 				position = pos.translate(new Vector2D(dx, dy)).scale(new Vector2D(25, 25));
 				super.render(rc);
+			}
+		}
+	}
+
+	public void crash() {
+		for (int dx = 0; dx < gemWidth; dx++) {
+			for (int dy = 0; dy < gemHeight; dy++) {
+				pf.clear(pos.translate(new Vector2D(dx, dy)));
+			}
+		}
+
+		for (int dx = 0; dx < gemWidth; dx++) {
+			Gem g = pf.ref(pos.translate(new Vector2D(dx, -1)));
+			if (g != null && g.type != GemType.WALL && g.color == color) {
+				g.crash();
+			}
+
+			g = pf.ref(pos.translate(new Vector2D(dx, gemHeight)));
+			if (g != null && g.type != GemType.WALL && g.color == color) {
+				g.crash();
+			}
+		}
+
+		for (int dy = 0; dy < gemWidth; dy++) {
+			Gem g = pf.ref(pos.translate(new Vector2D(-1, dy)));
+			if (g != null && g.type != GemType.WALL && g.color == color) {
+				g.crash();
+			}
+
+			g = pf.ref(pos.translate(new Vector2D(gemWidth, dy)));
+			if (g != null && g.type != GemType.WALL && g.color == color) {
+				g.crash();
 			}
 		}
 	}
@@ -84,5 +118,17 @@ public class Gem extends Sprite {
 		pf.set(newPos, this);
 		pos = newPos;
 		return true;
+	}
+
+	private Color gemColor(String rscName) {
+		if (rscName.equals("redGem")) {
+			return Color.RED;
+		}
+		else if (rscName.equals("greenGem")) {
+			return Color.GREEN;
+		}
+		else {
+			return null;
+		}
 	}
 }
