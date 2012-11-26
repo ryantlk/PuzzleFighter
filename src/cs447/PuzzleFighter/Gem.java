@@ -39,7 +39,7 @@ public class Gem extends Sprite {
 		Vector2D newPos = pos.translate(dv);
 		// TODO: Think about fixing for horizontal movement?
 		for (int dx = 0; dx < gemWidth; dx++) {
-			if (pf.isFilled(newPos.translate(new Vector2D(dx, 0)))) {
+			if (pf.isFilled(newPos.translate(new Vector2D(dx, gemHeight - 1)))) {
 				return false;
 			}
 		}
