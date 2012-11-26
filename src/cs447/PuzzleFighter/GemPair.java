@@ -48,4 +48,8 @@ public class GemPair {
 		gem1.render(rc);
 		gem2.render(rc);
 	}
+
+	public boolean contains(Gem g) {
+		return (gem1 == g || gem2 == g);
+	}
 }

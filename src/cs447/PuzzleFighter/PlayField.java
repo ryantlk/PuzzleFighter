@@ -32,7 +32,7 @@ public class PlayField {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				Gem g = grid[y][x];
-				if (g != null) {
+				if (g != null && !cursor.contains(g)) {
 					g.render(rc);
 				}
 			}
@@ -73,7 +73,13 @@ public class PlayField {
 		if (cursor.move(DOWN)) {
 			return;
 		}
+		else {
+			fall();
+			cursor = new GemPair(width/2, 0, this);
+		}
+	}
 
+	public void fall() {
 		for (int y = height-1; y >= 0; y--) {
 			for (int x = 0; x < width; x++) {
 				if (grid[y][x] != null) {
@@ -83,7 +89,6 @@ public class PlayField {
 				}
 			}
 		}
-		cursor = new GemPair(width/2, 0, this);
 	}
 
 	public void update(long deltaMs, Keyboard keyboard) {

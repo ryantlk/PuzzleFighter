@@ -10,6 +10,9 @@ public class Gem extends Sprite {
 	public GemType type;
 	public Vector2D pos;
 
+	public int gemWidth;
+	public int gemHeight;
+
 	public Gem(PlayField pf, Vector2D pos, GemType type) {
 		this(pf, pos, type, "redGem");
 	}
@@ -19,20 +22,40 @@ public class Gem extends Sprite {
 		this.pf = pf;
 		this.pos = pos;
 		this.type = type;
+		gemWidth = 1;
+		gemHeight = 1;
 	}
 
 	public void render(RenderingContext rc) {
-		position = pos.scale(new Vector2D(25, 25));
-		super.render(rc);
+		for (int dx = 0; dx < gemWidth; dx++) {
+			for (int dy = 0; dy < gemHeight; dy++) {
+				position = pos.translate(new Vector2D(dx, dy)).scale(new Vector2D(25, 25));
+				super.render(rc);
+			}
+		}
 	}
 
 	public boolean move(Vector2D dv) {
 		Vector2D newPos = pos.translate(dv);
-		if (pf.isFilled(newPos)) {
-			return false;
+		// TODO: Think about fixing for horizontal movement?
+		for (int dx = 0; dx < gemWidth; dx++) {
+			if (pf.isFilled(newPos.translate(new Vector2D(dx, 0)))) {
+				return false;
+			}
 		}
-		pf.clear(pos);
-		pf.set(newPos, this);
+
+		for (int dy = 0; dy < gemHeight; dy++) {
+			for (int dx = 0; dx < gemWidth; dx++) {
+				pf.clear(pos.translate(new Vector2D(dx, dy)));
+			}
+		}
+
+		for (int dy = 0; dy < gemHeight; dy++) {
+			for (int dx = 0; dx < gemWidth; dx++) {
+				pf.set(newPos.translate(new Vector2D(dx, dy)), this);
+			}
+		}
+
 		pos = newPos;
 		return true;
 	}
