@@ -45,6 +45,14 @@ public class PlayField {
 		this.cursor = new GemPair(randomGem(new Vector2D(width/2, 1)), randomGem(new Vector2D(width/2, 0)));
 	}
 
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+	
 	public void render(RenderingContext rc) {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {

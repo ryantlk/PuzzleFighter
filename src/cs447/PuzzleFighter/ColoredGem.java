@@ -17,6 +17,10 @@ abstract public class ColoredGem extends Gem {
 		this.pos = pos;
 	}
 
+	public Color getColor() {
+		return color;
+	}
+
 	public void render(RenderingContext rc) {
 		position = pos.scale(new Vector2D(32, 32));
 		super.render(rc);
