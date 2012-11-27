@@ -15,21 +15,12 @@ public class PuzzleFighter extends StaticScreenGame {
 
 	public PuzzleFighter() {
 		super(width, height, false);
-		PaintableCanvas.loadDefaultFrames("redGem", 25, 25, 1, JIGSHAPE.RECTANGLE, Color.RED);
-		PaintableCanvas.loadDefaultFrames("greenGem", 25, 25, 1, JIGSHAPE.RECTANGLE, Color.GREEN);
-		PaintableCanvas.loadDefaultFrames("blueGem", 25, 25, 1, JIGSHAPE.RECTANGLE, Color.BLUE);
-		PaintableCanvas.loadDefaultFrames("yellowGem", 25, 25, 1, JIGSHAPE.RECTANGLE, Color.YELLOW);
+		PaintableCanvas.loadDefaultFrames("redGem", 25, 25, 2, JIGSHAPE.RECTANGLE, Color.RED);
+		PaintableCanvas.loadDefaultFrames("greenGem", 25, 25, 2, JIGSHAPE.RECTANGLE, Color.GREEN);
+		PaintableCanvas.loadDefaultFrames("blueGem", 25, 25, 2, JIGSHAPE.RECTANGLE, Color.BLUE);
+		PaintableCanvas.loadDefaultFrames("yellowGem", 25, 25, 2, JIGSHAPE.RECTANGLE, Color.YELLOW);
 
 		pf = new PlayField(6, 13);
-		/* System.out.println("--------");
-		for (int i = 0; i < 32; i++) {
-			if (i == 8) {
-				pf.move(PlayField.LEFT);
-			}
-			pf.step();
-			System.out.print(pf);
-			System.out.println("--------");
-		} */
 	}
 
 	public void render(RenderingContext rc) {

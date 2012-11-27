@@ -7,9 +7,9 @@ public class GemPair {
 	public ColoredGem gem1;
 	public ColoredGem gem2;
 
-	public GemPair(PlayField pf, int x, int y, Color c1, Color c2) {
-		this.gem1 = new PowerGem(pf, new Vector2D(x, y+1), c1);
-		this.gem2 = new PowerGem(pf, new Vector2D(x, y), c2);
+	public GemPair(ColoredGem gem1, ColoredGem gem2) {
+		this.gem1 = gem1;
+		this.gem2 = gem2;
 	}
 
 	public boolean move(Vector2D dv) {

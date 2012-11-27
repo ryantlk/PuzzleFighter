@@ -22,10 +22,12 @@ public class PowerGem extends ColoredGem {
 		super.render(rc, t);
 	}
 
-	public void crash(Color color) {
+	public int crash(Color color) {
 		if (this.color != color) {
-			return;
+			return 0;
 		}
+
+		int crashCount = gemWidth * gemHeight;
 
 		for (int dx = 0; dx < gemWidth; dx++) {
 			for (int dy = 0; dy < gemHeight; dy++) {
@@ -36,26 +38,28 @@ public class PowerGem extends ColoredGem {
 		for (int dx = 0; dx < gemWidth; dx++) {
 			Gem g = pf.ref(pos.translate(new Vector2D(dx, -1)));
 			if (g != null) {
-				g.crash(color);
+				crashCount += g.crash(color);
 			}
 
 			g = pf.ref(pos.translate(new Vector2D(dx, gemHeight)));
 			if (g != null) {
-				g.crash(color);
+				crashCount += g.crash(color);
 			}
 		}
 
 		for (int dy = 0; dy < gemWidth; dy++) {
 			Gem g = pf.ref(pos.translate(new Vector2D(-1, dy)));
 			if (g != null) {
-				g.crash(color);
+				crashCount += g.crash(color);
 			}
 
 			g = pf.ref(pos.translate(new Vector2D(gemWidth, dy)));
 			if (g != null) {
-				g.crash(color);
+				crashCount += g.crash(color);
 			}
 		}
+
+		return crashCount;
 	}
 
 	public boolean move(Vector2D dv) {
@@ -81,5 +85,9 @@ public class PowerGem extends ColoredGem {
 
 		pos = newPos;
 		return true;
+	}
+
+	public boolean endTurn() {
+		return false;
 	}
 }

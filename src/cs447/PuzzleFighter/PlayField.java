@@ -29,11 +29,20 @@ public class PlayField {
 		return colors[randSrc.nextInt(colors.length)];
 	}
 
+	private ColoredGem randomGem(Vector2D pos) {
+		if (randSrc.nextBoolean()) {
+			return new PowerGem(this, pos, randomColor());
+		}
+		else {
+			return new CrashGem(this, pos, randomColor());
+		}
+	}
+
 	public PlayField(int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.grid = new ColoredGem[height][width];
-		this.cursor = new GemPair(this, width/2, 0, randomColor(), randomColor());
+		this.cursor = new GemPair(randomGem(new Vector2D(width/2, 1)), randomGem(new Vector2D(width/2, 0)));
 	}
 
 	public void render(RenderingContext rc) {
@@ -82,21 +91,45 @@ public class PlayField {
 			return;
 		}
 		else {
-			fall();
-			cursor = new GemPair(this, width/2, 0, randomColor(), randomColor());
+			boolean keepGoing = true;
+			while (keepGoing) {
+				keepGoing = fall();
+				keepGoing |= crashGems();
+			}
+			cursor = new GemPair(randomGem(new Vector2D(width/2, 1)), randomGem(new Vector2D(width/2, 0)));
 		}
 	}
 
-	public void fall() {
+	public boolean fall() {
+		boolean hadEffect = false;
+
 		for (int y = height-1; y >= 0; y--) {
 			for (int x = 0; x < width; x++) {
 				if (grid[y][x] != null) {
 					ColoredGem g = grid[y][x];
-					while (g.move(DOWN))
-						;
+					while (g.move(DOWN)) {
+						hadEffect = true;
+					}
 				}
 			}
 		}
+
+		return hadEffect;
+	}
+
+	public boolean crashGems() {
+		boolean hadEffect = false;
+
+		for (int y = height-1; y >= 0; y--) {
+			for (int x = 0; x < width; x++) {
+				ColoredGem g = grid[y][x];
+				if (g != null) {
+					hadEffect |= g.endTurn();
+				}
+			}
+		}
+
+		return hadEffect;
 	}
 
 	public void update(long deltaMs, Keyboard keyboard) {

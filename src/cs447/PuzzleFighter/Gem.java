@@ -2,12 +2,10 @@ package cs447.PuzzleFighter;
 
 import jig.engine.Sprite;
 
-public class Gem extends Sprite {
+abstract public class Gem extends Sprite {
+	abstract public int crash(Color color);
+
 	public Gem(String resource) {
 		super(resource);
-	}
-
-	public void crash(Color color) {
-		return;
 	}
 }

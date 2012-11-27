@@ -3,10 +3,13 @@ package cs447.PuzzleFighter;
 import jig.engine.RenderingContext;
 import jig.engine.util.Vector2D;
 
-public class ColoredGem extends Gem {
+abstract public class ColoredGem extends Gem {
 	protected PlayField pf;
 	Color color;
 	Vector2D pos;
+
+	abstract public int crash(Color color);
+	abstract public boolean endTurn();
 
 	public ColoredGem(PlayField pf, Vector2D pos, Color color) {
 		super(colorResource(color));
@@ -18,35 +21,6 @@ public class ColoredGem extends Gem {
 	public void render(RenderingContext rc) {
 		position = pos.scale(new Vector2D(25, 25));
 		super.render(rc);
-	}
-
-	public void crash(Color color) {
-		if (this.color != color) {
-			return;
-		}
-
-		pf.clear(pos);
-
-		Gem g;
-		g = pf.ref(pos.translate(PlayField.UP));
-		if (g != null) {
-			g.crash(color);
-		}
-
-		g = pf.ref(pos.translate(PlayField.DOWN));
-		if (g != null) {
-			g.crash(color);
-		}
-
-		g = pf.ref(pos.translate(PlayField.LEFT));
-		if (g != null) {
-			g.crash(color);
-		}
-
-		g = pf.ref(pos.translate(PlayField.RIGHT));
-		if (g != null) {
-			g.crash(color);
-		}
 	}
 
 	public boolean move(Vector2D dv) {
