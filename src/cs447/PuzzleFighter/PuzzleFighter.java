@@ -1,10 +1,8 @@
 package cs447.PuzzleFighter;
 
-import java.awt.Color;
 
-import jig.engine.PaintableCanvas;
 import jig.engine.RenderingContext;
-import jig.engine.PaintableCanvas.JIGSHAPE;
+import jig.engine.ResourceFactory;
 import jig.engine.hli.StaticScreenGame;
 
 public class PuzzleFighter extends StaticScreenGame {
@@ -13,12 +11,13 @@ public class PuzzleFighter extends StaticScreenGame {
 
 	private PlayField pf;
 
+	final static String RSC_PATH = "cs447/PuzzleFighter/resources/";
+	final static String SPRITE_SHEET = RSC_PATH + "gems.png";
+
 	public PuzzleFighter() {
 		super(width, height, false);
-		PaintableCanvas.loadDefaultFrames("redGem", 25, 25, 2, JIGSHAPE.RECTANGLE, Color.RED);
-		PaintableCanvas.loadDefaultFrames("greenGem", 25, 25, 2, JIGSHAPE.RECTANGLE, Color.GREEN);
-		PaintableCanvas.loadDefaultFrames("blueGem", 25, 25, 2, JIGSHAPE.RECTANGLE, Color.BLUE);
-		PaintableCanvas.loadDefaultFrames("yellowGem", 25, 25, 2, JIGSHAPE.RECTANGLE, Color.YELLOW);
+
+		ResourceFactory.getFactory().loadResources(RSC_PATH, "resources.xml");
 
 		pf = new PlayField(6, 13);
 	}

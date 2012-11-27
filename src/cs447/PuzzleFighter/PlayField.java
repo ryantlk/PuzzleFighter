@@ -14,7 +14,7 @@ public class PlayField {
 	public static final Vector2D RIGHT = new Vector2D(+1,  0);
 	public static final Gem WALL = new WallGem();
 
-	private final static Color[] colors = new Color[] { Color.RED, Color.GREEN };
+	private final static Color[] colors = new Color[] { Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW };
 	private Random randSrc = new Random();
 
 	private int width;
@@ -61,7 +61,7 @@ public class PlayField {
 		int x = (int) pos.getX();
 		int y = (int) pos.getY();
 		if (x < 0 || x >= width || y < 0 || y >= height) {
-			return WALL; 
+			return WALL;
 		}
 
 		return grid[y][x];

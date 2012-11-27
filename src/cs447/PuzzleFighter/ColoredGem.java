@@ -11,15 +11,15 @@ abstract public class ColoredGem extends Gem {
 	abstract public int crash(Color color);
 	abstract public boolean endTurn();
 
-	public ColoredGem(PlayField pf, Vector2D pos, Color color) {
-		super(colorResource(color));
+	public ColoredGem(PlayField pf, Vector2D pos, Color color, String type) {
+		super(resource(color, type));
 		this.pf = pf;
 		this.color = color;
 		this.pos = pos;
 	}
 
 	public void render(RenderingContext rc) {
-		position = pos.scale(new Vector2D(25, 25));
+		position = pos.scale(new Vector2D(32, 32));
 		super.render(rc);
 	}
 
@@ -60,16 +60,18 @@ abstract public class ColoredGem extends Gem {
 		return true;
 	}
 
-	private static String colorResource(Color color) {
+	private static String resource(Color color, String type) {
 		switch (color) {
 		case RED:
-			return "redGem";
+			return PuzzleFighter.SPRITE_SHEET + "#red" + type;
 		case GREEN:
-			return "greenGem";
-		case YELLOW:
+			return PuzzleFighter.SPRITE_SHEET + "#green" + type;
 		case BLUE:
+			return PuzzleFighter.SPRITE_SHEET + "#blue" + type;
+		case YELLOW:
+			return PuzzleFighter.SPRITE_SHEET + "#yellow" + type;
 		default:
-			return "redGem";
+			return PuzzleFighter.SPRITE_SHEET + "#red" + type;
 		}
 	}
 }

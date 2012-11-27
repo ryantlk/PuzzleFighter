@@ -10,13 +10,13 @@ public class PowerGem extends ColoredGem {
 	int gemHeight;
 
 	public PowerGem(PlayField pf, Vector2D pos, Color color) {
-		super(pf, pos, color);
+		super(pf, pos, color, "Power");
 		this.gemWidth = 1;
 		this.gemHeight = 1;
 	}
 
 	public void render(RenderingContext rc) {
-		position = pos.scale(new Vector2D(25, 25));
+		position = pos.scale(new Vector2D(32, 32));
 		AffineTransform t = AffineTransform.getTranslateInstance(position.getX(), position.getY());
 		t.scale(gemWidth, gemHeight);
 		super.render(rc, t);
