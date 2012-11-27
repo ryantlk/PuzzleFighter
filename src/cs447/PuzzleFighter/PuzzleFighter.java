@@ -6,8 +6,8 @@ import jig.engine.ResourceFactory;
 import jig.engine.hli.StaticScreenGame;
 
 public class PuzzleFighter extends StaticScreenGame {
-	public final static int height = 500;
-	public final static int width = 500;
+	public final static int height = 416;
+	public final static int width = 192;
 
 	private PlayField pf;
 
