@@ -1,6 +1,7 @@
 package cs447.PuzzleFighter;
 
 import java.awt.event.KeyEvent;
+import java.util.Random;
 
 import jig.engine.Keyboard;
 import jig.engine.RenderingContext;
@@ -11,21 +12,28 @@ public class PlayField {
 	public static final Vector2D  DOWN = new Vector2D( 0, +1);
 	public static final Vector2D  LEFT = new Vector2D(-1,  0);
 	public static final Vector2D RIGHT = new Vector2D(+1,  0);
-	public static final Gem WALL = new Gem(null, null, GemType.WALL);
+	public static final Gem WALL = new WallGem();
+
+	private final static Color[] colors = new Color[] { Color.RED, Color.GREEN };
+	private Random randSrc = new Random();
 
 	private int width;
 	private int height;
-	private Gem[][] grid;
+	private ColoredGem[][] grid;
 	private GemPair cursor;
 
 	private long inputTimer = 0;
 	private long renderTimer = 0;
 
+	private Color randomColor() {
+		return colors[randSrc.nextInt(colors.length)];
+	}
+
 	public PlayField(int width, int height) {
 		this.width = width;
 		this.height = height;
-		this.grid = new Gem[height][width];
-		this.cursor = new GemPair(width/2, 0, this);
+		this.grid = new ColoredGem[height][width];
+		this.cursor = new GemPair(this, width/2, 0, randomColor(), randomColor());
 	}
 
 	public void render(RenderingContext rc) {
@@ -50,7 +58,7 @@ public class PlayField {
 		return grid[y][x];
 	}
 
-	public void set(Vector2D pos, Gem g) {
+	public void set(Vector2D pos, ColoredGem g) {
 		int x = (int) pos.getX();
 		int y = (int) pos.getY();
 
@@ -75,7 +83,7 @@ public class PlayField {
 		}
 		else {
 			fall();
-			cursor = new GemPair(width/2, 0, this);
+			cursor = new GemPair(this, width/2, 0, randomColor(), randomColor());
 		}
 	}
 
@@ -83,7 +91,7 @@ public class PlayField {
 		for (int y = height-1; y >= 0; y--) {
 			for (int x = 0; x < width; x++) {
 				if (grid[y][x] != null) {
-					Gem g = grid[y][x];
+					ColoredGem g = grid[y][x];
 					while (g.move(DOWN))
 						;
 				}

@@ -4,17 +4,17 @@ import jig.engine.RenderingContext;
 import jig.engine.util.Vector2D;
 
 public class GemPair {
-	public Gem gem1;
-	public Gem gem2;
+	public ColoredGem gem1;
+	public ColoredGem gem2;
 
-	public GemPair(int x, int y, PlayField pf) {
-		this.gem1 = new Gem(pf, new Vector2D(x, y+1), GemType.GEM);
-		this.gem2 = new Gem(pf, new Vector2D(x, y), GemType.GEM, "greenGem");
+	public GemPair(PlayField pf, int x, int y, Color c1, Color c2) {
+		this.gem1 = new PowerGem(pf, new Vector2D(x, y+1), c1);
+		this.gem2 = new PowerGem(pf, new Vector2D(x, y), c2);
 	}
 
 	public boolean move(Vector2D dv) {
-		Gem t1;
-		Gem t2;
+		ColoredGem t1;
+		ColoredGem t2;
 		t1 = gem1;
 		t2 = gem2;
 
