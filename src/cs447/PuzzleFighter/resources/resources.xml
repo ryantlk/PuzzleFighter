@@ -1,0 +1,6 @@
+<resources>
+	<spritesheet>
+		<imagesrc>gems.png</imagesrc>
+		<framesrc>sprites.xml</framesrc>
+	</spritesheet>
+</resources>
