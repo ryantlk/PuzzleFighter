@@ -8,7 +8,7 @@ public class CrashGem extends ColoredGem {
 		super(pf, pos, color, "Crash");
 	}
 
-	public int crash(Color color) {
+	public int crash(Color color, boolean initialCrash) {
 		if (this.color != color) {
 			return 0;
 		}
@@ -20,34 +20,61 @@ public class CrashGem extends ColoredGem {
 		Gem g;
 		g = pf.ref(pos.translate(PlayField.UP));
 		if (g != null) {
-			crashCount += g.crash(color);
+			crashCount += g.crash(color, false);
 		}
 
 		g = pf.ref(pos.translate(PlayField.DOWN));
 		if (g != null) {
-			crashCount += g.crash(color);
+			crashCount += g.crash(color, false);
 		}
 
 		g = pf.ref(pos.translate(PlayField.LEFT));
 		if (g != null) {
-			crashCount += g.crash(color);
+			crashCount += g.crash(color, false);
 		}
 
 		g = pf.ref(pos.translate(PlayField.RIGHT));
 		if (g != null) {
-			crashCount += g.crash(color);
+			crashCount += g.crash(color, false);
 		}
 
 		return crashCount;
 	}
 
 	public boolean endTurn() {
-		int crashCount = crash(color);
-		if (crashCount == 1) {
+		int crashCount = 0;
+
+		pf.clear(pos);
+
+		Gem g;
+		g = pf.ref(pos.translate(PlayField.UP));
+		if (g != null) {
+			crashCount += g.crash(color, true);
+		}
+
+		g = pf.ref(pos.translate(PlayField.DOWN));
+		if (g != null) {
+			crashCount += g.crash(color, true);
+		}
+
+		g = pf.ref(pos.translate(PlayField.LEFT));
+		if (g != null) {
+			crashCount += g.crash(color, true);
+		}
+
+		g = pf.ref(pos.translate(PlayField.RIGHT));
+		if (g != null) {
+			crashCount += g.crash(color, true);
+		}
+
+		if (crashCount == 0) {
 			pf.set(pos, this);
 			return false;
 		}
-		return true;
+		else {
+			crashCount += crash(color, false);
+			return true;
+		}
 	}
 
 	protected static String resource(Color color) {

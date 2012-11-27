@@ -22,7 +22,7 @@ public class PowerGem extends ColoredGem {
 		super.render(rc, t);
 	}
 
-	public int crash(Color color) {
+	public int crash(Color color, boolean initialCrash) {
 		if (this.color != color) {
 			return 0;
 		}
@@ -38,24 +38,24 @@ public class PowerGem extends ColoredGem {
 		for (int dx = 0; dx < gemWidth; dx++) {
 			Gem g = pf.ref(pos.translate(new Vector2D(dx, -1)));
 			if (g != null) {
-				crashCount += g.crash(color);
+				crashCount += g.crash(color, false);
 			}
 
 			g = pf.ref(pos.translate(new Vector2D(dx, gemHeight)));
 			if (g != null) {
-				crashCount += g.crash(color);
+				crashCount += g.crash(color, false);
 			}
 		}
 
 		for (int dy = 0; dy < gemWidth; dy++) {
 			Gem g = pf.ref(pos.translate(new Vector2D(-1, dy)));
 			if (g != null) {
-				crashCount += g.crash(color);
+				crashCount += g.crash(color, false);
 			}
 
 			g = pf.ref(pos.translate(new Vector2D(gemWidth, dy)));
 			if (g != null) {
-				crashCount += g.crash(color);
+				crashCount += g.crash(color, false);
 			}
 		}
 

@@ -60,4 +60,36 @@
 		<height>32</height>
 		<width>32</width>
 	</frameset>
+	<frameset>
+		<name>redTimer</name>
+		<top>64</top>
+		<left>0</left>
+		<height>32</height>
+		<width>32</width>
+		<rows>5</rows>
+	</frameset>
+	<frameset>
+		<name>greenTimer</name>
+		<top>64</top>
+		<left>32</left>
+		<height>32</height>
+		<width>32</width>
+		<rows>5</rows>
+	</frameset>
+	<frameset>
+		<name>blueTimer</name>
+		<top>64</top>
+		<left>64</left>
+		<height>32</height>
+		<width>32</width>
+		<rows>5</rows>
+	</frameset>
+	<frameset>
+		<name>yellowTimer</name>
+		<top>64</top>
+		<left>96</left>
+		<height>32</height>
+		<width>32</width>
+		<rows>5</rows>
+	</frameset>
 </spriteset>

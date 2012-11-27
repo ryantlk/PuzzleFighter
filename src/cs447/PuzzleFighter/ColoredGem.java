@@ -8,7 +8,6 @@ abstract public class ColoredGem extends Gem {
 	Color color;
 	Vector2D pos;
 
-	abstract public int crash(Color color);
 	abstract public boolean endTurn();
 
 	public ColoredGem(PlayField pf, Vector2D pos, Color color, String type) {

@@ -91,6 +91,18 @@ public class PlayField {
 			return;
 		}
 		else {
+			for (int y = height-1; y >= 0; y--) {
+				for (int x = 0; x < width; x++) {
+					ColoredGem g = grid[y][x];
+					if (g instanceof TimerGem) {
+						TimerGem tg = (TimerGem) g;
+						if (tg.stepTimer()) {
+							grid[y][x] = new PowerGem(this, tg.pos, tg.color);
+						}
+					}
+				}
+			}
+
 			boolean keepGoing = true;
 			while (keepGoing) {
 				keepGoing = fall();

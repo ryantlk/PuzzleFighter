@@ -5,7 +5,7 @@ public class WallGem extends Gem {
 		super(PuzzleFighter.SPRITE_SHEET + "#redPower");
 	}
 
-	public int crash(Color color) {
+	public int crash(Color color, boolean initialCrash) {
 		return 0;
 	}
 }
