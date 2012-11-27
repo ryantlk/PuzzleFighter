@@ -163,7 +163,7 @@ public class PowerGem extends ColoredGem {
 		}
 		int[] d1 = new int[m];
 		int[] d2 = new int[m];
-		Stack<Integer> stack = new Stack<>();
+		Stack<Integer> stack = new Stack<Integer>();
 		for(int i = 0; i < n; i++){
 			for(int j = 0; j < m; j++){
 				if(matrix[i][j] == 1){
