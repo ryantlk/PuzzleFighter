@@ -101,6 +101,7 @@ public class PlayField {
 	public void step() {
 		if (!cursor.move(DOWN)) {
 			cursor = null;
+			stepTimers();
 		}
 	}
 
@@ -132,6 +133,20 @@ public class PlayField {
 
 		return crashScore;
 	}
+
+	public void stepTimers() {
+		for (int y = height-1; y >= 0; y--) {
+			for (int x = 0; x < width; x++) {
+				ColoredGem g = grid[y][x];
+				if (g instanceof TimerGem) {
+					TimerGem tg = (TimerGem) g;
+					if (tg.stepTimer()) {
+						grid[y][x] = new PowerGem(this, tg.pos, tg.color);
+					}
+				}
+			}
+		}
+	}
 	
 	public void gravitate() {
 		if (fall()) {
@@ -154,17 +169,6 @@ public class PlayField {
 		}
 
 		cursor = new GemPair(randomGem(new Vector2D(width/2, 1)), randomGem(new Vector2D(width/2, 0)));
-		for (int y = height-1; y >= 0; y--) {
-			for (int x = 0; x < width; x++) {
-				ColoredGem g = grid[y][x];
-				if (g instanceof TimerGem) {
-					TimerGem tg = (TimerGem) g;
-					if (tg.stepTimer()) {
-						grid[y][x] = new PowerGem(this, tg.pos, tg.color);
-					}
-				}
-			}
-		}
 	}
 	
 	public void update(long deltaMs, Keyboard keyboard) {
