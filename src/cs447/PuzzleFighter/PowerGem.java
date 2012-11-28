@@ -94,61 +94,30 @@ public class PowerGem extends ColoredGem {
 	}
 	
 	public void combine(){
-		int[][] green = new int[pf.getHeight()][pf.getWidth()];
-		int[][] red = new int[pf.getHeight()][pf.getWidth()];
-		int[][] blue = new int[pf.getHeight()][pf.getWidth()];
-		int[][] yellow = new int[pf.getHeight()][pf.getWidth()];
-		
-		for(int i = 0; i < pf.getHeight(); i++){
-			for(int j = 0; j < pf.getWidth(); j++){
-				green[i][j] = 1;
-			}
-		}
-		for(int i = 0; i < pf.getHeight(); i++){
-			for(int j = 0; j < pf.getWidth(); j++){
-				red[i][j] = 1;
-			}
-		}
-		for(int i = 0; i < pf.getHeight(); i++){
-			for(int j = 0; j < pf.getWidth(); j++){
-				blue[i][j] = 1;
-			}
-		}
-		for(int i = 0; i < pf.getHeight(); i++){
-			for(int j = 0; j < pf.getWidth(); j++){
-				yellow[i][j] = 1;
-			}
-		}
-		
-		//create arrays for each of the gem colors which are used
-		//to find 
-		for(int i = 0; i < pf.getHeight(); i++){
-			for(int j = 0; j < pf.getWidth(); j++){
-				ColoredGem g = (ColoredGem)pf.ref(new Vector2D(j, i));
-				if(g != null){
-					Color c = g.getColor();
-					switch(c){
-						case GREEN:
-							green[i][j] = 0;
-							break;
-						case RED:
-							red[i][j] = 0;
-							break;
-						case BLUE:
-							blue[i][j] = 0;
-							break;
-						case YELLOW:
-							yellow[i][j] = 0;
-							break;
-						default:
-							System.out.println("Switch fail in combine().");
+		final Color[] colors = new Color[] { Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW };
+		int[][] grid = new int[pf.getHeight()][pf.getWidth()];
+		for (Color c : colors) {
+			//System.out.println("===" + c + "===");
+			for (int y = 0; y < pf.getHeight(); y++) {
+				for (int x = 0; x < pf.getWidth(); x++) {
+					grid[y][x] = 1;
+
+					Gem g = pf.ref(new Vector2D(x, y));
+					if (g != null && g instanceof PowerGem && ((PowerGem) g).color == c) {
+						grid[y][x] = 0;
 					}
+					//System.out.print(grid[y][x]);
 				}
+				//System.out.print("\n");
 			}
-		}
-		Vector2D[] thepoints;
-		thepoints = maxSubMatrix(green);
-		thepoints = maxSubMatrix(red);
+
+			Vector2D[] thepoints = maxSubMatrix(grid);
+
+			Vector2D tl = thepoints[0];
+			Vector2D br = thepoints[1];
+
+			//System.out.println(tl + "," + br);
+		}	
 	}
 	
 	public Vector2D[] maxSubMatrix(int[][] matrix){
