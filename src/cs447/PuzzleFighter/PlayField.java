@@ -5,6 +5,7 @@ import java.util.Random;
 
 import jig.engine.Keyboard;
 import jig.engine.RenderingContext;
+import jig.engine.ResourceFactory;
 import jig.engine.util.Vector2D;
 
 public class PlayField {
@@ -19,6 +20,7 @@ public class PlayField {
 
 	private int width;
 	private int height;
+	private int turnScore;
 	private ColoredGem[][] grid;
 	private GemPair cursor;
 
@@ -116,34 +118,49 @@ public class PlayField {
 		return hadEffect;
 	}
 
-	public boolean crashGems() {
-		boolean hadEffect = false;
+	public int crashGems() {
+		int crashScore = 0;
 
 		for (int y = height-1; y >= 0; y--) {
 			for (int x = 0; x < width; x++) {
 				ColoredGem g = grid[y][x];
 				if (g != null) {
-					hadEffect |= g.endTurn();
+					crashScore += g.endTurn();
 				}
 			}
 		}
 
-		return hadEffect;
+		return crashScore;
 	}
 	
 	public void gravitate() {
-		boolean keepGoing;
-		keepGoing = fall() || crashGems();
-		if (!keepGoing) {
-			cursor = new GemPair(randomGem(new Vector2D(width/2, 1)), randomGem(new Vector2D(width/2, 0)));
-			for (int y = height-1; y >= 0; y--) {
-				for (int x = 0; x < width; x++) {
-					ColoredGem g = grid[y][x];
-					if (g instanceof TimerGem) {
-						TimerGem tg = (TimerGem) g;
-						if (tg.stepTimer()) {
-							grid[y][x] = new PowerGem(this, tg.pos, tg.color);
-						}
+		if (fall()) {
+			return;
+		}
+
+		int crashScore = crashGems();
+		if (crashScore != 0) {
+			turnScore += crashScore;
+			return;
+		}
+
+		if (turnScore > 0) {
+			ResourceFactory.getJIGLogger().info("Combo'd " + turnScore + " gems");
+			for (int i = 0; i < turnScore / 2; i++) {
+				grid[i / width][i % width] = new TimerGem(this, new Vector2D(i%width,i/width), Color.RED);
+			}
+			turnScore = 0;
+			return;
+		}
+
+		cursor = new GemPair(randomGem(new Vector2D(width/2, 1)), randomGem(new Vector2D(width/2, 0)));
+		for (int y = height-1; y >= 0; y--) {
+			for (int x = 0; x < width; x++) {
+				ColoredGem g = grid[y][x];
+				if (g instanceof TimerGem) {
+					TimerGem tg = (TimerGem) g;
+					if (tg.stepTimer()) {
+						grid[y][x] = new PowerGem(this, tg.pos, tg.color);
 					}
 				}
 			}

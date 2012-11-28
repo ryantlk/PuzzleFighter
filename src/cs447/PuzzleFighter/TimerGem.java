@@ -20,8 +20,8 @@ public class TimerGem extends ColoredGem {
 		return 1;
 	}
 
-	public boolean endTurn() {
-		return false;
+	public int endTurn() {
+		return 0;
 	}
 
 	public boolean stepTimer() {

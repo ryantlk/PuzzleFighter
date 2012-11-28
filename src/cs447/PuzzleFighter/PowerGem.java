@@ -88,9 +88,9 @@ public class PowerGem extends ColoredGem {
 		return true;
 	}
 
-	public boolean endTurn() {
+	public int endTurn() {
 		combine();
-		return false;
+		return 0;
 	}
 	
 	public void combine(){

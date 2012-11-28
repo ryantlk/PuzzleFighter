@@ -41,7 +41,7 @@ public class CrashGem extends ColoredGem {
 		return crashCount;
 	}
 
-	public boolean endTurn() {
+	public int endTurn() {
 		int crashCount = 0;
 
 		pf.clear(pos);
@@ -69,11 +69,11 @@ public class CrashGem extends ColoredGem {
 
 		if (crashCount == 0) {
 			pf.set(pos, this);
-			return false;
+			return crashCount;
 		}
 		else {
 			crashCount += crash(color, false);
-			return true;
+			return crashCount;
 		}
 	}
 
