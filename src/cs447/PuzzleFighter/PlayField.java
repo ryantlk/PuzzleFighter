@@ -57,12 +57,14 @@ public class PlayField {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				Gem g = grid[y][x];
-				if (g != null && !cursor.contains(g)) {
+				if (g != null && (cursor == null || !cursor.contains(g))) {
 					g.render(rc);
 				}
 			}
 		}
-		cursor.render(rc);
+		if (cursor != null) {
+			cursor.render(rc);
+		}
 	}
 
 	public Gem ref(Vector2D pos) {
@@ -95,28 +97,8 @@ public class PlayField {
 	}
 
 	public void step() {
-		if (cursor.move(DOWN)) {
-			return;
-		}
-		else {
-			for (int y = height-1; y >= 0; y--) {
-				for (int x = 0; x < width; x++) {
-					ColoredGem g = grid[y][x];
-					if (g instanceof TimerGem) {
-						TimerGem tg = (TimerGem) g;
-						if (tg.stepTimer()) {
-							grid[y][x] = new PowerGem(this, tg.pos, tg.color);
-						}
-					}
-				}
-			}
-
-			boolean keepGoing = true;
-			while (keepGoing) {
-				keepGoing = fall();
-				keepGoing |= crashGems();
-			}
-			cursor = new GemPair(randomGem(new Vector2D(width/2, 1)), randomGem(new Vector2D(width/2, 0)));
+		if (!cursor.move(DOWN)) {
+			cursor = null;
 		}
 	}
 
@@ -126,10 +108,7 @@ public class PlayField {
 		for (int y = height-1; y >= 0; y--) {
 			for (int x = 0; x < width; x++) {
 				if (grid[y][x] != null) {
-					ColoredGem g = grid[y][x];
-					while (g.move(DOWN)) {
-						hadEffect = true;
-					}
+					hadEffect |= grid[y][x].move(DOWN);
 				}
 			}
 		}
@@ -151,40 +130,64 @@ public class PlayField {
 
 		return hadEffect;
 	}
-
+	
+	public void gravitate() {
+		boolean keepGoing;
+		keepGoing = fall() || crashGems();
+		if (!keepGoing) {
+			cursor = new GemPair(randomGem(new Vector2D(width/2, 1)), randomGem(new Vector2D(width/2, 0)));
+			for (int y = height-1; y >= 0; y--) {
+				for (int x = 0; x < width; x++) {
+					ColoredGem g = grid[y][x];
+					if (g instanceof TimerGem) {
+						TimerGem tg = (TimerGem) g;
+						if (tg.stepTimer()) {
+							grid[y][x] = new PowerGem(this, tg.pos, tg.color);
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	public void update(long deltaMs, Keyboard keyboard) {
 		renderTimer += deltaMs;
 		inputTimer += deltaMs;
 
 		if (inputTimer > 100) {
 			inputTimer = 0;
-			boolean ccw = keyboard.isPressed(KeyEvent.VK_Q);
-			boolean cw = keyboard.isPressed(KeyEvent.VK_E);
-			boolean left = keyboard.isPressed(KeyEvent.VK_A);
-			boolean right = keyboard.isPressed(KeyEvent.VK_D);
-			boolean down = keyboard.isPressed(KeyEvent.VK_S);
+			if (cursor != null) {
+				boolean ccw = keyboard.isPressed(KeyEvent.VK_Q);
+				boolean cw = keyboard.isPressed(KeyEvent.VK_E);
+				boolean left = keyboard.isPressed(KeyEvent.VK_A);
+				boolean right = keyboard.isPressed(KeyEvent.VK_D);
+				boolean down = keyboard.isPressed(KeyEvent.VK_S);
 
-			if (ccw && !cw) {
-				cursor.rotateCounterClockwise();
+				if (ccw && !cw) {
+					cursor.rotateCounterClockwise();
+				}
+				if (cw && !ccw) {
+					cursor.rotateClockwise();
+				}
+				if (down) {
+					move(PlayField.DOWN);
+				}
+				if (left && !right) {
+					move(PlayField.LEFT);
+				}
+				if (right && !left) {
+					move(PlayField.RIGHT);
+				}
 			}
-			if (cw && !ccw) {
-				cursor.rotateClockwise();
-			}
-			if (down) {
-				move(PlayField.DOWN);
-			}
-			if (left && !right) {
-				move(PlayField.LEFT);
-			}
-			if (right && !left) {
-				move(PlayField.RIGHT);
-			}
-
 		}
 
-		if (renderTimer > 500) {
+		if (cursor != null && renderTimer > 500) {
 			renderTimer = 0;
 			step();
+		}
+		if (cursor == null && renderTimer > 100) {
+			renderTimer = 0;
+			gravitate();
 		}
 	}
 }
