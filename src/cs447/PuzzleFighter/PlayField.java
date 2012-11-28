@@ -30,7 +30,7 @@ public class PlayField {
 	}
 
 	private ColoredGem randomGem(Vector2D pos) {
-		if (randSrc.nextFloat() > 0.167) {
+		if (randSrc.nextFloat() > 0.25) {
 			return new PowerGem(this, pos, randomColor());
 		}
 		else {
