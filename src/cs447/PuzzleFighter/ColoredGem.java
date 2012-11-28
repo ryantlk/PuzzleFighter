@@ -4,6 +4,8 @@ import jig.engine.RenderingContext;
 import jig.engine.util.Vector2D;
 
 abstract public class ColoredGem extends Gem {
+	public static final Vector2D scale = new Vector2D(32, 32);
+
 	protected PlayField pf;
 	Color color;
 	Vector2D pos;
@@ -22,7 +24,7 @@ abstract public class ColoredGem extends Gem {
 	}
 
 	public void render(RenderingContext rc) {
-		position = pos.scale(new Vector2D(32, 32));
+		position = pos.scale(scale);
 		super.render(rc);
 	}
 

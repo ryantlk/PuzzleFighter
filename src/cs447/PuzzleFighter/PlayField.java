@@ -1,6 +1,7 @@
 package cs447.PuzzleFighter;
 
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.util.Random;
 
 import jig.engine.Keyboard;
@@ -14,6 +15,8 @@ public class PlayField {
 	public static final Vector2D  LEFT = new Vector2D(-1,  0);
 	public static final Vector2D RIGHT = new Vector2D(+1,  0);
 	public static final Gem WALL = new WallGem();
+	private final Vector2D START_TOP;
+	private final Vector2D START_BOT;
 
 	private final static Color[] colors = new Color[] { Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW };
 	private Random randSrc = new Random();
@@ -44,7 +47,9 @@ public class PlayField {
 		this.width = width;
 		this.height = height;
 		this.grid = new ColoredGem[height][width];
-		this.cursor = new GemPair(randomGem(new Vector2D(width/2, 1)), randomGem(new Vector2D(width/2, 0)));
+		START_TOP = new Vector2D(width/2, 0);
+		START_BOT = START_TOP.translate(DOWN);
+		this.cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
 	}
 
 	public int getWidth() {
@@ -168,7 +173,7 @@ public class PlayField {
 			return;
 		}
 
-		cursor = new GemPair(randomGem(new Vector2D(width/2, 1)), randomGem(new Vector2D(width/2, 0)));
+		cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
 	}
 	
 	public void update(long deltaMs, Keyboard keyboard) {

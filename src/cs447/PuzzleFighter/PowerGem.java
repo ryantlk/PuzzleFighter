@@ -17,7 +17,7 @@ public class PowerGem extends ColoredGem {
 	}
 
 	public void render(RenderingContext rc) {
-		position = pos.scale(new Vector2D(32, 32));
+		position = pos.scale(scale);
 		AffineTransform t = AffineTransform.getTranslateInstance(position.getX(), position.getY());
 		t.scale(gemWidth, gemHeight);
 		super.render(rc, t);
