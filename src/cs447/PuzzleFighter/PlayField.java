@@ -50,8 +50,8 @@ public class PlayField {
 		this.grid = new ColoredGem[height][width];
 		START_TOP = new Vector2D(width/2, 0);
 		START_BOT = START_TOP.translate(DOWN);
-		//this.cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
-		this.cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
+		this.cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
+		//this.cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
 	}
 
 	public int getWidth() {
@@ -231,6 +231,57 @@ public class PlayField {
 				}else{
 					break;
 				}
+//				}else if(zwidth == 0 && zheight == 0){
+//					break;
+//				}else if(zwidth > 0){
+//					int y = (int)tl.getY();
+//					int x = (int)tl.getX();
+//					for(int i = x; i < x + zwidth + 1; i++){
+//						Gem upper = this.ref(new Vector2D(i, y - 1));
+//						Gem lower = this.ref(new Vector2D(i, y + 1));
+//						Gem current = this.ref(new Vector2D(x, y));
+//						if(((PowerGem)current).gemHeight > 1){
+//							combinegrid[y][x] = 1;
+//						}
+//						if(!(upper instanceof PowerGem) && !(lower instanceof PowerGem)){
+//							combinegrid[y][i] = 1;
+//						}
+//						if(upper instanceof PowerGem){
+//							if(((PowerGem)upper).gemWidth > 1 || ((PowerGem)upper).gemHeight > 1){
+//								combinegrid[y][i] = 1;
+//							}
+//						}
+//						if(lower instanceof PowerGem){
+//							if(((PowerGem)lower).gemWidth > 1 || ((PowerGem)lower).gemHeight > 1){
+//								combinegrid[y][i] = 1;
+//							}
+//						}
+//					}
+//				}else{
+//					int y = (int)tl.getY();
+//					int x = (int)tl.getX();
+//					for(int i = y; i < y + zheight + 1; i++){
+//						Gem upper = this.ref(new Vector2D(x - 1, i));
+//						Gem lower = this.ref(new Vector2D(x + 1, i));
+//						Gem current = this.ref(new Vector2D(x, y));
+//						if(((PowerGem)current).gemWidth > 1){
+//							combinegrid[y][x] = 1;
+//						}
+//						if(!(upper instanceof PowerGem) && !(lower instanceof PowerGem)){
+//							combinegrid[i][x] = 1;
+//						}
+//						if(upper instanceof PowerGem){
+//							if(((PowerGem)upper).gemWidth > 1 || ((PowerGem)upper).gemHeight > 1){
+//								combinegrid[i][x] = 1;
+//							}
+//						}
+//						if(lower instanceof PowerGem){
+//							if(((PowerGem)lower).gemWidth > 1 || ((PowerGem)lower).gemHeight > 1){
+//								combinegrid[i][x] = 1;
+//							}
+//						}
+//					}
+//				}
 			}
 
 			//System.out.println(tl + "," + br);
@@ -314,8 +365,8 @@ public class PlayField {
 			turnScore = 0;
 			return;
 		}
-		//cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
-		this.cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
+		cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
+		//this.cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
 	}
 	
 	public void update(long deltaMs, Keyboard keyboard) {
