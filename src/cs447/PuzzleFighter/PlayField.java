@@ -369,18 +369,13 @@ public class PlayField {
 		//this.cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
 	}
 	
-	public void update(long deltaMs, Keyboard keyboard) {
+	public void update(long deltaMs, boolean down, boolean left, boolean right, boolean ccw, boolean cw) {
 		renderTimer += deltaMs;
 		inputTimer += deltaMs;
 
 		if (inputTimer > 100) {
 			inputTimer = 0;
 			if (cursor != null) {
-				boolean ccw = keyboard.isPressed(KeyEvent.VK_Q);
-				boolean cw = keyboard.isPressed(KeyEvent.VK_E);
-				boolean left = keyboard.isPressed(KeyEvent.VK_A);
-				boolean right = keyboard.isPressed(KeyEvent.VK_D);
-				boolean down = keyboard.isPressed(KeyEvent.VK_S);
 
 				if (ccw && !cw) {
 					cursor.rotateCounterClockwise();
