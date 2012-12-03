@@ -40,14 +40,14 @@ public class PuzzleFighter extends StaticScreenGame {
 		boolean right1 = keyboard.isPressed(KeyEvent.VK_D);
 		boolean ccw1 = keyboard.isPressed(KeyEvent.VK_Q);
 		boolean cw1 = keyboard.isPressed(KeyEvent.VK_E);
-		pfLeft.update(deltaMs, down1, left1, right1, ccw1, cw1);
+		pfRight.garbage += pfLeft.update(deltaMs, down1, left1, right1, ccw1, cw1);
 
 		boolean down2 = keyboard.isPressed(KeyEvent.VK_K);
 		boolean left2 = keyboard.isPressed(KeyEvent.VK_J);
 		boolean right2 = keyboard.isPressed(KeyEvent.VK_L);
 		boolean ccw2 = keyboard.isPressed(KeyEvent.VK_U);
 		boolean cw2 = keyboard.isPressed(KeyEvent.VK_O);
-		pfRight.update(deltaMs, down2, left2, right2, ccw2, cw2);
+		pfLeft.garbage += pfRight.update(deltaMs, down2, left2, right2, ccw2, cw2);
 	}
 
 	public static void main(String[] args) {

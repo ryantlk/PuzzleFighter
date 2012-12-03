@@ -31,6 +31,8 @@ public class PlayField {
 	private long inputTimer = 0;
 	private long renderTimer = 0;
 
+	public int garbage;
+
 	private Color randomColor() {
 		return colors[randSrc.nextInt(colors.length)];
 	}
@@ -48,6 +50,8 @@ public class PlayField {
 		this.width = width;
 		this.height = height;
 		this.grid = new ColoredGem[height][width];
+		this.turnScore = 0;
+		this.garbage = 0;
 		START_TOP = new Vector2D(width/2, 0);
 		START_BOT = START_TOP.translate(DOWN);
 		this.cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
@@ -346,30 +350,21 @@ public class PlayField {
 		return thepoints;
 	}
 	
-	public void gravitate() {
+	public boolean gravitate() {
 		if (fall()) {
-			return;
+			return true;
 		}
 
 		int crashScore = crashGems();
 		if (crashScore != 0) {
 			turnScore += crashScore;
-			return;
+			return true;
 		}
 
-		if (turnScore > 0) {
-			ResourceFactory.getJIGLogger().info("Combo'd " + turnScore + " gems");
-			for (int i = 0; i < turnScore / 2; i++) {
-				grid[i / width][i % width] = new TimerGem(this, new Vector2D(i%width,i/width), Color.RED);
-			}
-			turnScore = 0;
-			return;
-		}
-		cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
-		//this.cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
+		return false;
 	}
 	
-	public void update(long deltaMs, boolean down, boolean left, boolean right, boolean ccw, boolean cw) {
+	public int update(long deltaMs, boolean down, boolean left, boolean right, boolean ccw, boolean cw) {
 		renderTimer += deltaMs;
 		inputTimer += deltaMs;
 
@@ -401,8 +396,26 @@ public class PlayField {
 		}
 		if (cursor == null && renderTimer > 100) {
 			renderTimer = 0;
-			gravitate();
+			boolean moreToDo = gravitate();
 			combine();
+			if (!moreToDo) {
+				if (garbage > 0) {
+					garbage /= 2;
+					for (int i = 0; i < garbage; i++) {
+						grid[i / width][i % width] = new TimerGem(this, new Vector2D(i%width,i/width), Color.RED);
+					}
+					garbage = 0;
+					return 0;
+				}
+				else {
+					cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
+					//this.cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
+					int tmp = turnScore;
+					turnScore = 0;
+					return tmp;
+				}
+			}
 		}
+		return 0;
 	}
 }
