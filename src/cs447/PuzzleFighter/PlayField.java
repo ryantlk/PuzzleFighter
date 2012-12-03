@@ -1,13 +1,9 @@
 package cs447.PuzzleFighter;
 
-import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
 import java.util.Random;
 import java.util.Stack;
 
-import jig.engine.Keyboard;
 import jig.engine.RenderingContext;
-import jig.engine.ResourceFactory;
 import jig.engine.util.Vector2D;
 
 public class PlayField {
