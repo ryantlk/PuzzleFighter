@@ -50,7 +50,7 @@ public class PlayField {
 		this.garbage = 0;
 		START_TOP = new Vector2D(width/2, 0);
 		START_BOT = START_TOP.translate(DOWN);
-		this.cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
+		this.cursor = new GemPair(randomGem(START_BOT), new PowerGem(this, START_TOP, Color.RED));
 		//this.cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
 	}
 
@@ -156,194 +156,13 @@ public class PlayField {
 	}
 	
 	public void combine(){
-		final Color[] colors = new Color[] { Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW };
-		int[][] combinegrid = new int[height][width];
-		for (Color c : colors) {
-			//System.out.println("===" + c + "===");
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
-					combinegrid[y][x] = 1;
-
-					Gem g = this.ref(new Vector2D(x, y));
-					if (g != null && g instanceof PowerGem && ((PowerGem) g).color == c) {
-						combinegrid[y][x] = 0;
-					}
-					///System.out.print(grid[y][x]);
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < height; y++){
+				if(grid[y][x] instanceof PowerGem){
+					((PowerGem)grid[y][x]).combine();
 				}
-				//System.out.print("\n");
 			}
-			while(true){
-				Vector2D[] thepoints = maxSubMatrix(combinegrid);
-
-				Vector2D tl = thepoints[0];
-				Vector2D br = thepoints[1];
-
-				int zwidth = (int)Math.abs(br.getX()-tl.getX());
-				int zheight = (int)Math.abs(br.getY()-tl.getY());
-				
-				if(c == Color.RED){
-				for (int y = 0; y < height; y++) {
-					for (int x = 0; x < width; x++) {
-						System.out.print(combinegrid[y][x]);
-					}
-					System.out.print("\n");
-				}
-				System.out.println(tl.getX() + " " + tl.getY());
-				System.out.println(br.getX() + " " + br.getY());
-				System.out.println(zwidth + " " + zheight + "....");
-				}
-
-				if(zwidth > 0 && zheight > 0){
-					boolean something = false;
-					for(int i = (int)tl.getX(); i < (int)tl.getX() + zwidth + 1; i++){
-						something = false;
-						for(int j = (int)tl.getY(); j < (int)tl.getY() + zheight + 1; j++){
-							PowerGem check = (PowerGem)this.ref(new Vector2D(i, j));
-							if(check.pos.getX() < (int)tl.getX() || //left side outside bounds
-									check.pos.getY() < (int)tl.getY() || //top left corner outside bounds
-									check.pos.getY() + check.gemHeight - 1 > (int)br.getY() || //bottom left corner outside bounds
-									check.pos.getX() + check.gemWidth - 1 > (int)br.getX()){
-								something = true;
-								for(int k = (int)check.pos.getX(); k < (int)check.pos.getX() + check.gemWidth; k++){
-									for(int l = (int)check.pos.getY(); l < (int)check.pos.getY() + check.gemHeight; l++){
-										combinegrid[l][k] = 1;
-									}
-								}
-								break;
-							}
-						}
-						if(something)
-							break;
-					}
-					if(!something){
-						PowerGem g = (PowerGem) this.ref(new Vector2D(tl.getX(), tl.getY()));
-						g.gemWidth = zwidth + 1;
-						g.gemHeight = zheight + 1;
-						for(int i = (int)tl.getX(); i < (int)tl.getX() + zwidth + 1; i++){
-							for(int j = (int)tl.getY(); j < (int)tl.getY() + zheight + 1; j++){
-								//pf.ref(new Vector2D(i, j)).setActivation(false);
-								this.set(new Vector2D(i, j), g);
-								combinegrid[j][i] = 1;
-							}
-						}
-						this.set(new Vector2D(tl.getX(), tl.getY()), g);
-					}
-				}else{
-					break;
-				}
-//				}else if(zwidth == 0 && zheight == 0){
-//					break;
-//				}else if(zwidth > 0){
-//					int y = (int)tl.getY();
-//					int x = (int)tl.getX();
-//					for(int i = x; i < x + zwidth + 1; i++){
-//						Gem upper = this.ref(new Vector2D(i, y - 1));
-//						Gem lower = this.ref(new Vector2D(i, y + 1));
-//						Gem current = this.ref(new Vector2D(x, y));
-//						if(((PowerGem)current).gemHeight > 1){
-//							combinegrid[y][x] = 1;
-//						}
-//						if(!(upper instanceof PowerGem) && !(lower instanceof PowerGem)){
-//							combinegrid[y][i] = 1;
-//						}
-//						if(upper instanceof PowerGem){
-//							if(((PowerGem)upper).gemWidth > 1 || ((PowerGem)upper).gemHeight > 1){
-//								combinegrid[y][i] = 1;
-//							}
-//						}
-//						if(lower instanceof PowerGem){
-//							if(((PowerGem)lower).gemWidth > 1 || ((PowerGem)lower).gemHeight > 1){
-//								combinegrid[y][i] = 1;
-//							}
-//						}
-//					}
-//				}else{
-//					int y = (int)tl.getY();
-//					int x = (int)tl.getX();
-//					for(int i = y; i < y + zheight + 1; i++){
-//						Gem upper = this.ref(new Vector2D(x - 1, i));
-//						Gem lower = this.ref(new Vector2D(x + 1, i));
-//						Gem current = this.ref(new Vector2D(x, y));
-//						if(((PowerGem)current).gemWidth > 1){
-//							combinegrid[y][x] = 1;
-//						}
-//						if(!(upper instanceof PowerGem) && !(lower instanceof PowerGem)){
-//							combinegrid[i][x] = 1;
-//						}
-//						if(upper instanceof PowerGem){
-//							if(((PowerGem)upper).gemWidth > 1 || ((PowerGem)upper).gemHeight > 1){
-//								combinegrid[i][x] = 1;
-//							}
-//						}
-//						if(lower instanceof PowerGem){
-//							if(((PowerGem)lower).gemWidth > 1 || ((PowerGem)lower).gemHeight > 1){
-//								combinegrid[i][x] = 1;
-//							}
-//						}
-//					}
-//				}
-			}
-
-			//System.out.println(tl + "," + br);
 		}	
-	}
-	
-	public Vector2D[] maxSubMatrix(int[][] matrix){
-		int maxArea = -1, tempArea = -1;
-		int x1, y1, x2, y2;
-		int n = height;
-		int m = width;
-		x1 = x2 = y1 = y2 = 0;
-		int[] d = new int[m];
-		for(int i = 0; i < m; i++){
-			d[i] = -1;
-		}
-		int[] d1 = new int[m];
-		int[] d2 = new int[m];
-		Stack<Integer> stack = new Stack<Integer>();
-		for(int i = 0; i < n; i++){
-			for(int j = 0; j < m; j++){
-				if(matrix[i][j] == 1){
-					d[j] = i;
-				}
-			}
-			stack.clear();
-			for(int j = 0; j < m; j++){
-				while(stack.size() > 0 && d[stack.peek()] <= d[j]){
-					stack.pop();
-				}
-				d1[j] = (stack.size() == 0) ? -1 : stack.peek();
-				stack.push(j);
-			}
-			stack.clear();
-			for(int j = m - 1; j >= 0; j--){
-				while(stack.size() > 0 && d[stack.peek()] <= d[j]){
-					stack.pop();
-				}
-				d2[j] = (stack.size() == 0) ? m : stack.peek();
-				stack.push(j);
-			}
-			for(int j = 0; j < m; j++){
-				tempArea = (i - d[j]) * (d2[j] - d1[j] - 1);
-				if(tempArea > maxArea){
-					maxArea = tempArea;
-					x1 = d1[j] + 1;
-					y1 = d[j] + 1;
-					x2 = d2[j] - 1;
-					y2 = i;
-				}
-			}
-		}
-		Vector2D[] thepoints = new Vector2D[2];
-		if(maxArea == 0 && y2 < y1){
-			thepoints[0] = new Vector2D(0, 0);
-			thepoints[1] = new Vector2D(0, 0);
-		}
-		else{
-			thepoints[0] = new Vector2D(x1, y1);
-			thepoints[1] = new Vector2D(x2, y2);
-		}
-		return thepoints;
 	}
 	
 	public boolean gravitate() {
@@ -405,7 +224,7 @@ public class PlayField {
 				}
 				else {
 					cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
-					//this.cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
+					//cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
 					int tmp = turnScore;
 					turnScore = 0;
 					return tmp;
