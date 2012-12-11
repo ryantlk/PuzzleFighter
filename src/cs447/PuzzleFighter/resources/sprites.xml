@@ -3,7 +3,7 @@
 	<name>PuzzleFighter</name>
 	<type>image/png</type>
 	<width>128</width>
-	<height>64</height>
+	<height>256</height>
 	<frameset>
 		<name>redPower</name>
 		<top>0</top>
@@ -91,5 +91,12 @@
 		<height>32</height>
 		<width>32</width>
 		<rows>5</rows>
+	</frameset>
+	<frameset>
+		<name>redDiamond</name>
+		<top>224</top>
+		<left>0</left>
+		<height>32</height>
+		<width>32</width>
 	</frameset>
 </spriteset>
