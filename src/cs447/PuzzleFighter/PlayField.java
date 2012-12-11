@@ -1,7 +1,6 @@
 package cs447.PuzzleFighter;
 
 import java.util.Random;
-import java.util.Stack;
 
 import jig.engine.RenderingContext;
 import jig.engine.util.Vector2D;
