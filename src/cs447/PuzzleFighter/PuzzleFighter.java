@@ -3,6 +3,12 @@ package cs447.PuzzleFighter;
 
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jig.engine.RenderingContext;
 import jig.engine.ResourceFactory;
@@ -14,6 +20,8 @@ public class PuzzleFighter extends StaticScreenGame {
 
 	private PlayField pfLeft;
 	private PlayField pfRight;
+	
+	public Socket socket;
 
 	final static String RSC_PATH = "cs447/PuzzleFighter/resources/";
 	final static String SPRITE_SHEET = RSC_PATH + "gems.png";
@@ -53,5 +61,29 @@ public class PuzzleFighter extends StaticScreenGame {
 	public static void main(String[] args) {
 		PuzzleFighter game = new PuzzleFighter();
 		game.run();
+	}
+	
+	public void connect(Socket socket){
+		try {
+			socket = new Socket("localhost", 50621);
+		} catch (UnknownHostException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
+	public void host(Socket socket){
+		ServerSocket serv = null;
+		try {
+			serv = new ServerSocket(50621);
+		} catch (IOException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		try {
+			socket = serv.accept();
+		} catch (IOException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 }
