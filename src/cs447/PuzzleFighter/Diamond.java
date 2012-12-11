@@ -41,32 +41,7 @@ public class Diamond extends ColoredGem{
 
 	@Override
 	public int crash(Color color, boolean initialCrash) {
-		int crashCount = 1;
-
-		pf.clear(pos);
-
-		Gem g;
-		g = pf.ref(pos.translate(PlayField.UP));
-		if (g != null) {
-			crashCount += g.crash(color, false);
-		}
-
-		g = pf.ref(pos.translate(PlayField.DOWN));
-		if (g != null) {
-			crashCount += g.crash(color, false);
-		}
-
-		g = pf.ref(pos.translate(PlayField.LEFT));
-		if (g != null) {
-			crashCount += g.crash(color, false);
-		}
-
-		g = pf.ref(pos.translate(PlayField.RIGHT));
-		if (g != null) {
-			crashCount += g.crash(color, false);
-		}
-
-		return crashCount;
+		return 0;
 	}
 	
 }
