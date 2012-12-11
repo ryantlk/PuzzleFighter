@@ -21,6 +21,7 @@ public class PlayField {
 	private int width;
 	private int height;
 	private int turnScore;
+	private int gemCount;
 	private ColoredGem[][] grid;
 	private GemPair cursor;
 
@@ -34,10 +35,16 @@ public class PlayField {
 	}
 
 	private ColoredGem randomGem(Vector2D pos) {
+		if(gemCount % 25 == 0 && gemCount != 0){
+			gemCount++;
+			return new Diamond(this, pos, Color.RED);
+		}
 		if (randSrc.nextFloat() > 0.25) {
+			gemCount++;
 			return new PowerGem(this, pos, randomColor());
 		}
 		else {
+			gemCount++;
 			return new CrashGem(this, pos, randomColor());
 		}
 	}
@@ -51,7 +58,7 @@ public class PlayField {
 		START_TOP = new Vector2D(width/2, 0);
 		START_BOT = START_TOP.translate(DOWN);
 		this.cursor = new GemPair(randomGem(START_BOT), new PowerGem(this, START_TOP, Color.RED));
-		//this.cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
+		//this.cursor = new GemPair(new Diamond(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
 	}
 
 	public int getWidth() {
