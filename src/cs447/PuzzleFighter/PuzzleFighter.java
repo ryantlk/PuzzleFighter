@@ -31,7 +31,7 @@ public class PuzzleFighter extends StaticScreenGame {
 
 	public PuzzleFighter() throws IOException {
 		super(width, height, false);
-		host();
+		connect();
 		/*try {
 			socket.close();
 		} catch (IOException ex) {
@@ -79,6 +79,7 @@ public class PuzzleFighter extends StaticScreenGame {
 	
 	public void connect(){
 		try {
+			//socket = new Socket("71.193.145.84", 50623);
 			socket = new Socket("192.168.1.148", 50623);
 		} catch (UnknownHostException ex) {
 			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
