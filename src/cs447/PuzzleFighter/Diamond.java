@@ -24,7 +24,7 @@ public class Diamond extends ColoredGem{
 		g = pf.ref(pos.translate(PlayField.DOWN));
 		if(!(g instanceof WallGem)){
 			Color c = ((ColoredGem)g).getColor();
-			System.out.println(c);
+			System.out.println(g.toString());
 			for(int x = 0; x < pf.getWidth(); x++){
 				for(int y = 0; y < pf.getHeight(); y++){
 					ColoredGem h = (ColoredGem)pf.ref(new Vector2D(x, y));
@@ -43,5 +43,4 @@ public class Diamond extends ColoredGem{
 	public int crash(Color color, boolean initialCrash) {
 		return 0;
 	}
-	
 }

@@ -2,7 +2,6 @@ package cs447.PuzzleFighter;
 
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
-import java.util.Stack;
 
 import jig.engine.RenderingContext;
 import jig.engine.util.Vector2D;

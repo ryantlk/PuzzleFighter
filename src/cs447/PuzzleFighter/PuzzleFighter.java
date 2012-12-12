@@ -3,6 +3,12 @@ package cs447.PuzzleFighter;
 
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jig.engine.RenderingContext;
 import jig.engine.ResourceFactory;
@@ -14,20 +20,33 @@ public class PuzzleFighter extends StaticScreenGame {
 
 	private PlayField pfLeft;
 	private PlayField pfRight;
+	
+	public Socket socket = null;
+	public ServerSocket serv = null;
 
 	final static String RSC_PATH = "cs447/PuzzleFighter/resources/";
 	final static String GEM_SHEET = RSC_PATH + "gems.png";
 	final static String CUT_SHEET = RSC_PATH + "cutman.png";
 	final static String MEGA_SHEET = RSC_PATH + "megaman.png";
 
-	public PuzzleFighter() {
+	public PuzzleFighter() throws IOException {
 		super(width, height, false);
+		host();
+		/*try {
+			socket.close();
+		} catch (IOException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		try {
+			serv.close();
+		} catch (IOException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		}*/
 
 		ResourceFactory.getFactory().loadResources(RSC_PATH, "resources.xml");
 
-		pfLeft = new PlayField(6, 13, true);
-		pfRight = new PlayField(6, 13, false);
-
+		pfLeft = new PlayField(6, 13, socket, false);
+		pfRight = new PlayField(6, 13, socket, true);
 	}
 
 	public void render(RenderingContext rc) {
@@ -53,8 +72,31 @@ public class PuzzleFighter extends StaticScreenGame {
 		pfLeft.garbage += pfRight.update(deltaMs, down2, left2, right2, ccw2, cw2);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		PuzzleFighter game = new PuzzleFighter();
 		game.run();
+	}
+	
+	public void connect(){
+		try {
+			socket = new Socket("127.0.0.1", 50623);
+		} catch (UnknownHostException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
+	public void host(){
+		try {
+			serv = new ServerSocket(50623);
+		} catch (IOException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		try {
+			socket = serv.accept();
+		} catch (IOException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 }

@@ -1,7 +1,15 @@
 package cs447.PuzzleFighter;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jig.engine.RenderingContext;
 import jig.engine.util.Vector2D;
@@ -22,17 +30,21 @@ public class PlayField {
 	private int height;
 	private int turnScore;
 	private int gemCount;
+	private boolean secondary;
+	private Socket socket;
+	private ObjectInputStream ois;
+	private ObjectOutputStream oos;
 	private ColoredGem[][] grid;
 	private GemPair cursor;
 
 	private long inputTimer = 0;
 	private long renderTimer = 0;
+	private short updateCount = 0;
 
 	public int garbage;
 
 	private RobotMaster fighter;
-	private boolean left;
-
+	
 	private Color randomColor() {
 		return colors[randSrc.nextInt(colors.length)];
 	}
@@ -52,18 +64,34 @@ public class PlayField {
 		}
 	}
 
-	public PlayField(int width, int height, boolean left) {
+	public PlayField(int width, int height, Socket socket, boolean secondary) throws IOException {
 		this.width = width;
 		this.height = height;
 		this.grid = new ColoredGem[height][width];
 		this.turnScore = 0;
 		this.garbage = 0;
+		this.socket = socket;
+		this.secondary = secondary;
 		START_TOP = new Vector2D(width/2, 0);
 		START_BOT = START_TOP.translate(DOWN);
-		this.cursor = new GemPair(randomGem(START_BOT), new PowerGem(this, START_TOP, Color.RED));
+		if(socket == null){
+			this.cursor = new GemPair(randomGem(START_BOT), new PowerGem(this, START_TOP, Color.RED));
+		}
+		if(socket != null){
+			if(!secondary){
+				OutputStream os = socket.getOutputStream();
+				oos = new ObjectOutputStream(os);
+				oos.flush();
+			}
+			if(secondary){
+				InputStream is = socket.getInputStream();
+				ois = new ObjectInputStream(is);
+			}
+		}
+		System.out.println("done creating");
 		//this.cursor = new GemPair(new Diamond(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
-		this.fighter = left ? new CutMan() : new MegaMan();
-		this.left = left;
+		this.fighter = !secondary ? new CutMan() : new MegaMan();
+		this.secondary = secondary;
 	}
 
 	public int getWidth() {
@@ -86,7 +114,7 @@ public class PlayField {
 		if (cursor != null) {
 			cursor.render(rc);
 		}
-		fighter.render(rc, left);
+		fighter.render(rc, !secondary);
 	}
 
 	public Gem ref(Vector2D pos) {
@@ -193,60 +221,162 @@ public class PlayField {
 	}
 	
 	public int update(long deltaMs, boolean down, boolean left, boolean right, boolean ccw, boolean cw) {
-		renderTimer += deltaMs;
-		inputTimer += deltaMs;
-
+		updateCount++;
 		fighter.update(deltaMs);
+		if(socket == null || (socket != null && !secondary)){
+			renderTimer += deltaMs;
+			inputTimer += deltaMs;
 
-		if (inputTimer > 100) {
-			inputTimer = 0;
-			if (cursor != null) {
+			if (inputTimer > 100) {
+				inputTimer = 0;
+				if (cursor != null) {
 
-				if (ccw && !cw) {
-					cursor.rotateCounterClockwise();
-				}
-				if (cw && !ccw) {
-					cursor.rotateClockwise();
-				}
-				if (down) {
-					move(PlayField.DOWN);
-				}
-				if (left && !right) {
-					move(PlayField.LEFT);
-				}
-				if (right && !left) {
-					move(PlayField.RIGHT);
-				}
-			}
-		}
-
-		if (cursor != null && renderTimer > 500) {
-			renderTimer = 0;
-			step();
-		}
-		if (cursor == null && renderTimer > 100) {
-			renderTimer = 0;
-			boolean moreToDo = gravitate();
-			combine();
-			if (!moreToDo) {
-				if (garbage > 0) {
-					garbage /= 2;
-					for (int i = 0; i < garbage; i++) {
-						grid[i / width][i % width] = new TimerGem(this, new Vector2D(i%width,i/width), Color.RED);
+					if (ccw && !cw) {
+						cursor.rotateCounterClockwise();
 					}
-					garbage = 0;
-					fighter.attack();
-					return 0;
+					
+					if (cw && !ccw) {
+						cursor.rotateClockwise();
+					}
+					if (down) {
+						move(PlayField.DOWN);
+					}
+					if (left && !right) {
+						move(PlayField.LEFT);
+					}
+					if (right && !left) {
+						move(PlayField.RIGHT);
+					}
 				}
-				else {
-					cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
-					//cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
-					int tmp = turnScore;
-					turnScore = 0;
-					return tmp;
+			}
+
+			if (cursor != null && renderTimer > 500) {
+				renderTimer = 0;
+				step();
+			}
+			if (cursor == null && renderTimer > 100) {
+				renderTimer = 0;
+				boolean moreToDo = gravitate();
+				combine();
+				if (!moreToDo) {
+					if (garbage > 0) {
+						garbage /= 2;
+						for (int i = 0; i < garbage; i++) {
+							grid[i / width][i % width] = new TimerGem(this, new Vector2D(i%width,i/width), Color.RED);
+						}
+						garbage = 0;
+						fighter.attack();
+						if(socket != null){
+							try {
+								oos.writeInt(1);
+							} catch (IOException ex) {
+								Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
+							}
+							netsend(0);
+						}
+						return 0;
+					}
+					else {
+						cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
+						//cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
+						int tmp = turnScore;
+						turnScore = 0;
+						if(socket != null){
+							try {
+								oos.writeInt(1);
+							} catch (IOException ex) {
+								Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
+							}
+							netsend(tmp);
+						}
+						return tmp;
+					}
+				}
+			}
+			if(socket != null && updateCount > 20){
+				try {
+					oos.writeInt(1);
+				} catch (IOException ex) {
+					Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
+				}
+				netsend(0);
+				updateCount = 0;
+			}
+			return 0;
+		}else{
+			try {
+				if(ois.available() > 0){
+					ois.readInt();
+					Packet pack = null;
+					try {
+						pack = (Packet)ois.readObject();
+					} catch (IOException ex) {
+						Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
+					} catch (ClassNotFoundException ex) {
+						Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
+					}
+					for(int i = 0; i < height; i++){
+						for(int j = 0; j < width; j++){
+							grid[i][j] = null;
+						}
+					}
+					for(int i = 0; i < height; i++){
+						for(int j = 0; j < width; j++){
+							if(pack.grid[i][j] != null){
+								if(pack.grid[i][j].type.contentEquals("Crash")){
+									grid[i][j] = new CrashGem(this, new Vector2D(j, i), pack.grid[i][j].color);
+								}else if(pack.grid[i][j].type.contentEquals("Diamond")){
+									grid[i][j] = new Diamond(this, new Vector2D(j, i), Color.RED);
+								}else if(pack.grid[i][j].type.contentEquals("Power")){
+									grid[i][j] = new PowerGem(this, new Vector2D(j, i), pack.grid[i][j].color);
+								}else{
+									grid[i][j] = new TimerGem(this, new Vector2D(j, i), pack.grid[i][j].color);
+									((TimerGem)grid[i][j]).setFrame(pack.grid[i][j].frame);
+								}
+							}
+						}
+					}
+					return pack.garbage;
+				}
+			} catch (IOException ex) {
+				Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			return 0;
+		}
+	}
+	
+	public void netsend(int garb){
+		ArrayList<ColoredGem> list = new ArrayList();
+		Packet thepacket = new Packet();
+		thepacket.garbage = garb;
+		thepacket.grid = new SerializableGem[height][width];
+		for(int i = 0; i < height; i++){
+			for(int j = 0; j < width; j++){
+				if(grid[i][j] != null && !list.contains(grid[i][j])){
+					thepacket.grid[i][j] = new SerializableGem();
+					thepacket.grid[i][j].x = (int)grid[i][j].pos.getX();
+					thepacket.grid[i][j].y = (int)grid[i][j].pos.getY();
+					thepacket.grid[i][j].color = grid[i][j].color;
+					if(grid[i][j] instanceof Diamond){
+						thepacket.grid[i][j].type = "Diamond";
+					}else if(grid[i][j] instanceof PowerGem){
+						thepacket.grid[i][j].type = "Power";
+						thepacket.grid[i][j].height = ((PowerGem)grid[i][j]).gemHeight;
+						thepacket.grid[i][j].width = ((PowerGem)grid[i][j]).gemWidth;
+					}else if(grid[i][j] instanceof CrashGem){
+						thepacket.grid[i][j].type = "Crash";
+					}else{
+						thepacket.grid[i][j].type = "Time";
+						thepacket.grid[i][j].frame = ((TimerGem)grid[i][j]).frame;
+					}
+					list.add(grid[i][j]);
 				}
 			}
 		}
-		return 0;
+		try {
+			oos.writeObject(thepacket);
+		} catch (IOException ex) {
+			Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 }
