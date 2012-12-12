@@ -21,18 +21,30 @@ public class PuzzleFighter extends StaticScreenGame {
 	private PlayField pfLeft;
 	private PlayField pfRight;
 	
-	public Socket socket;
+	public Socket socket = null;
+	public ServerSocket serv = null;
 
 	final static String RSC_PATH = "cs447/PuzzleFighter/resources/";
 	final static String SPRITE_SHEET = RSC_PATH + "gems.png";
 
-	public PuzzleFighter() {
+	public PuzzleFighter() throws IOException {
 		super(width, height, false);
+		host();
+		/*try {
+			socket.close();
+		} catch (IOException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		try {
+			serv.close();
+		} catch (IOException ex) {
+			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+		}*/
 
 		ResourceFactory.getFactory().loadResources(RSC_PATH, "resources.xml");
 
-		pfLeft = new PlayField(6, 13);
-		pfRight = new PlayField(6, 13);
+		pfLeft = new PlayField(6, 13, socket, false);
+		pfRight = new PlayField(6, 13, socket, true);
 	}
 
 	public void render(RenderingContext rc) {
@@ -48,7 +60,7 @@ public class PuzzleFighter extends StaticScreenGame {
 		boolean right1 = keyboard.isPressed(KeyEvent.VK_D);
 		boolean ccw1 = keyboard.isPressed(KeyEvent.VK_Q);
 		boolean cw1 = keyboard.isPressed(KeyEvent.VK_E);
-		pfRight.garbage += pfLeft.update(deltaMs, down1, left1, right1, ccw1, cw1);
+		/*pfRight.garbage +=*/ pfLeft.update(deltaMs, down1, left1, right1, ccw1, cw1);
 
 		boolean down2 = keyboard.isPressed(KeyEvent.VK_K);
 		boolean left2 = keyboard.isPressed(KeyEvent.VK_J);
@@ -58,14 +70,14 @@ public class PuzzleFighter extends StaticScreenGame {
 		pfLeft.garbage += pfRight.update(deltaMs, down2, left2, right2, ccw2, cw2);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		PuzzleFighter game = new PuzzleFighter();
 		game.run();
 	}
 	
-	public void connect(Socket socket){
+	public void connect(){
 		try {
-			socket = new Socket("localhost", 50621);
+			socket = new Socket("192.168.1.148", 50623);
 		} catch (UnknownHostException ex) {
 			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {
@@ -73,10 +85,9 @@ public class PuzzleFighter extends StaticScreenGame {
 		}
 	}
 	
-	public void host(Socket socket){
-		ServerSocket serv = null;
+	public void host(){
 		try {
-			serv = new ServerSocket(50621);
+			serv = new ServerSocket(50623);
 		} catch (IOException ex) {
 			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
 		}
