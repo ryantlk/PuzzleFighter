@@ -75,15 +75,14 @@ public class PlayField {
 		START_TOP = new Vector2D(width/2, 0);
 		START_BOT = START_TOP.translate(DOWN);
 
-		if(socket == null){
-			this.cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
-			if(secondary){
-				previewgem = new GemPair(randomGem(new Vector2D(-2, 8)), randomGem(new Vector2D(-2, 7)));
-			}else{
-				previewgem = new GemPair(randomGem(new Vector2D(7, 8)), randomGem(new Vector2D(7, 7)));
-			}
+	
+		this.cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
+		if(secondary){
+			previewgem = new GemPair(randomGem(new Vector2D(-2, 8)), randomGem(new Vector2D(-2, 7)));
+		}else{
+			previewgem = new GemPair(randomGem(new Vector2D(7, 8)), randomGem(new Vector2D(7, 7)));
 		}
-		else {
+		if(socket != null) {
 			OutputStream os = socket.getOutputStream();
 			oos = new ObjectOutputStream(os);
 			oos.flush();
