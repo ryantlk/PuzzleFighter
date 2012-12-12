@@ -18,6 +18,7 @@ public class PuzzleFighter extends StaticScreenGame {
 	final static String RSC_PATH = "cs447/PuzzleFighter/resources/";
 	final static String GEM_SHEET = RSC_PATH + "gems.png";
 	final static String CUT_SHEET = RSC_PATH + "cutman.png";
+	final static String MEGA_SHEET = RSC_PATH + "megaman.png";
 
 	public PuzzleFighter() {
 		super(width, height, false);

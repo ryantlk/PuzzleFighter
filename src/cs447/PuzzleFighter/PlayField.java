@@ -30,7 +30,7 @@ public class PlayField {
 
 	public int garbage;
 
-	private CutMan fighter;
+	private RobotMaster fighter;
 	private boolean left;
 
 	private Color randomColor() {
@@ -62,7 +62,7 @@ public class PlayField {
 		START_BOT = START_TOP.translate(DOWN);
 		this.cursor = new GemPair(randomGem(START_BOT), new PowerGem(this, START_TOP, Color.RED));
 		//this.cursor = new GemPair(new Diamond(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
-		this.fighter = new CutMan();
+		this.fighter = left ? new CutMan() : new MegaMan();
 		this.left = left;
 	}
 

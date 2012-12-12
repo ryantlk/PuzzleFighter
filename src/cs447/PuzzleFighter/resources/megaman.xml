@@ -1,0 +1,31 @@
+<spriteset>
+	<author>Kyle Siehl</author>
+	<name>Megaman</name>
+	<type>image/png</type>
+	<width>96</width>
+	<height>72</height>
+	<frameset>
+		<name>idle</name>
+		<top>0</top>
+		<left>0</left>
+		<height>32</height>
+		<width>32</width>
+		<columns>4</columns>
+	</frameset>
+	<frameset>
+	    <name>charge</name>
+	    <top>32</top>
+	    <left>0</left>
+	    <height>32</height>
+	    <width>32</width>
+	    <columns>7</columns>
+	</frameset>
+	<frameset>
+	    <name>buster</name>
+	    <top>0</top>
+	    <left>128</left>
+	    <height>16</height>
+	    <width>27</width>
+	    <columns>2</columns>
+	</frameset>
+</spriteset>

@@ -7,15 +7,14 @@ import jig.engine.ResourceFactory;
 import jig.engine.Sprite;
 import jig.engine.util.Vector2D;
 
-public class CutMan extends Sprite {
+public class CutMan extends RobotMaster {
 	private long timer;
 	private int frame;
-	public int attackFrame = 0;
+	public int attackFrame;
 	private CutManWeapon weapon;
 
 	public CutMan() {
 		super(PuzzleFighter.CUT_SHEET + "#idle");
-		this.position = new Vector2D(0,0);
 		this.timer = 0;
 		frame = 0;
 		setFrame(frame);
@@ -23,7 +22,7 @@ public class CutMan extends Sprite {
 	}
 
 	public void render(RenderingContext rc, boolean left) {
-		AffineTransform t = AffineTransform.getTranslateInstance(position.getX(), position.getY());
+		AffineTransform t = new AffineTransform();
 		if (left) {
 			t.translate(400, 0);
 		}
@@ -71,10 +70,35 @@ public class CutMan extends Sprite {
 		setFrame(0);
 	}
 
-	private void setImage(String rsc) {
-		frames = ResourceFactory.getFactory().getFrames(rsc);
-		width = frames.get(0).getWidth();
-		height = frames.get(0).getHeight();
-		setFrame(0);
+	private class CutManWeapon extends Sprite {
+		long animTimer;
+		long frameTimer;
+		int frame = 0;
+
+		public CutManWeapon() {
+			super(PuzzleFighter.CUT_SHEET + "#weapon");
+			this.animTimer = 0;
+			this.frameTimer = 0;
+		}
+
+		public boolean update(long deltaMs) {
+			animTimer += deltaMs;
+			frameTimer += deltaMs;
+			if (frameTimer > 150) {
+				frame = (frame + 1) % 4;
+				setFrame(frame);
+				frameTimer = 0;
+			}
+			if (animTimer > 1000) {
+				return true;
+			}
+			return false;
+		}
+
+		public void render(RenderingContext rc, AffineTransform t) {
+			t.translate(-40.0, 12.0);
+			t.translate(Math.sin(Math.PI/2.0 + Math.PI * 2 * animTimer / 1000.0) * 30, Math.sin(Math.PI * 2 * animTimer / 500.0) * 7.0);
+			super.render(rc, t);
+		}
 	}
 }
