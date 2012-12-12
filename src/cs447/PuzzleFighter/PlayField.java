@@ -181,6 +181,18 @@ public class PlayField {
 
 		return crashScore;
 	}
+	
+	public int crashDiamonds(){
+		int crashScore = 0;
+		for(int y = height -1; y >= 0; y--){
+			for(int x = 0; x < width; x++){
+				if(grid[y][x] != null && grid[y][x] instanceof Diamond){
+					crashScore += grid[y][x].endTurn();
+				}
+			}
+		}
+		return crashScore;
+	}
 
 	public void stepTimers() {
 		for (int y = height-1; y >= 0; y--) {
@@ -210,8 +222,8 @@ public class PlayField {
 		if (fall()) {
 			return true;
 		}
-
-		int crashScore = crashGems();
+		int crashScore = crashDiamonds();
+		crashScore += crashGems();
 		if (crashScore != 0) {
 			turnScore += crashScore;
 			return true;
@@ -272,7 +284,7 @@ public class PlayField {
 							} catch (IOException ex) {
 								Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
 							}
-							netsend(0);
+							netsend(0, true);
 						}
 						return 0;
 					}
@@ -287,7 +299,7 @@ public class PlayField {
 							} catch (IOException ex) {
 								Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
 							}
-							netsend(tmp);
+							netsend(tmp, false);
 						}
 						return tmp;
 					}
@@ -299,7 +311,7 @@ public class PlayField {
 				} catch (IOException ex) {
 					Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
 				}
-				netsend(0);
+				netsend(0, false);
 				updateCount = 0;
 			}
 			return 0;
@@ -319,6 +331,9 @@ public class PlayField {
 						for(int j = 0; j < width; j++){
 							grid[i][j] = null;
 						}
+					}
+					if(pack.attacking){
+						fighter.attack();
 					}
 					for(int i = 0; i < height; i++){
 						for(int j = 0; j < width; j++){
@@ -345,10 +360,11 @@ public class PlayField {
 		}
 	}
 	
-	public void netsend(int garb){
+	public void netsend(int garb, boolean attacking){
 		ArrayList<ColoredGem> list = new ArrayList();
 		Packet thepacket = new Packet();
 		thepacket.garbage = garb;
+		thepacket.attacking = attacking;
 		thepacket.grid = new SerializableGem[height][width];
 		for(int i = 0; i < height; i++){
 			for(int j = 0; j < width; j++){
