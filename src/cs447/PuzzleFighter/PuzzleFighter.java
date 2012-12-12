@@ -10,27 +10,29 @@ import jig.engine.hli.StaticScreenGame;
 
 public class PuzzleFighter extends StaticScreenGame {
 	public final static int height = 416;
-	public final static int width = 600;
+	public final static int width = 700;
 
 	private PlayField pfLeft;
 	private PlayField pfRight;
 
 	final static String RSC_PATH = "cs447/PuzzleFighter/resources/";
-	final static String SPRITE_SHEET = RSC_PATH + "gems.png";
+	final static String GEM_SHEET = RSC_PATH + "gems.png";
+	final static String CUT_SHEET = RSC_PATH + "cutman.png";
 
 	public PuzzleFighter() {
 		super(width, height, false);
 
 		ResourceFactory.getFactory().loadResources(RSC_PATH, "resources.xml");
 
-		pfLeft = new PlayField(6, 13);
-		pfRight = new PlayField(6, 13);
+		pfLeft = new PlayField(6, 13, true);
+		pfRight = new PlayField(6, 13, false);
+
 	}
 
 	public void render(RenderingContext rc) {
 		super.render(rc);
 		pfLeft.render(rc);
-		rc.setTransform(AffineTransform.getTranslateInstance(408, 0));
+		rc.setTransform(AffineTransform.getTranslateInstance(508, 0));
 		pfRight.render(rc);
 	}
 

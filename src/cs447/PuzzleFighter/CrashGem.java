@@ -80,15 +80,15 @@ public class CrashGem extends ColoredGem {
 	protected static String resource(Color color) {
 		switch (color) {
 		case RED:
-			return PuzzleFighter.SPRITE_SHEET + "#redCrash";
+			return PuzzleFighter.GEM_SHEET + "#redCrash";
 		case GREEN:
-			return PuzzleFighter.SPRITE_SHEET + "#greenCrash";
+			return PuzzleFighter.GEM_SHEET + "#greenCrash";
 		case BLUE:
-			return PuzzleFighter.SPRITE_SHEET + "#blueCrash";
+			return PuzzleFighter.GEM_SHEET + "#blueCrash";
 		case YELLOW:
-			return PuzzleFighter.SPRITE_SHEET + "#yellowCrash";
+			return PuzzleFighter.GEM_SHEET + "#yellowCrash";
 		default:
-			return PuzzleFighter.SPRITE_SHEET + "#redCrash";
+			return PuzzleFighter.GEM_SHEET + "#redCrash";
 		}
 	}
 }

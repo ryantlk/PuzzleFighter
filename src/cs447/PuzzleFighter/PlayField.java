@@ -30,6 +30,9 @@ public class PlayField {
 
 	public int garbage;
 
+	private CutMan fighter;
+	private boolean left;
+
 	private Color randomColor() {
 		return colors[randSrc.nextInt(colors.length)];
 	}
@@ -49,7 +52,7 @@ public class PlayField {
 		}
 	}
 
-	public PlayField(int width, int height) {
+	public PlayField(int width, int height, boolean left) {
 		this.width = width;
 		this.height = height;
 		this.grid = new ColoredGem[height][width];
@@ -59,6 +62,8 @@ public class PlayField {
 		START_BOT = START_TOP.translate(DOWN);
 		this.cursor = new GemPair(randomGem(START_BOT), new PowerGem(this, START_TOP, Color.RED));
 		//this.cursor = new GemPair(new Diamond(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
+		this.fighter = new CutMan();
+		this.left = left;
 	}
 
 	public int getWidth() {
@@ -81,6 +86,7 @@ public class PlayField {
 		if (cursor != null) {
 			cursor.render(rc);
 		}
+		fighter.render(rc, left);
 	}
 
 	public Gem ref(Vector2D pos) {
@@ -190,6 +196,8 @@ public class PlayField {
 		renderTimer += deltaMs;
 		inputTimer += deltaMs;
 
+		fighter.update(deltaMs);
+
 		if (inputTimer > 100) {
 			inputTimer = 0;
 			if (cursor != null) {
@@ -227,6 +235,7 @@ public class PlayField {
 						grid[i / width][i % width] = new TimerGem(this, new Vector2D(i%width,i/width), Color.RED);
 					}
 					garbage = 0;
+					fighter.attack();
 					return 0;
 				}
 				else {

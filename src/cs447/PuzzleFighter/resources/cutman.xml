@@ -1,0 +1,33 @@
+<spriteset>
+	<author>Kyle Siehl</author>
+	<name>Cutman</name>
+	<type>image/png</type>
+	<width>62</width>
+	<height>88</height>
+	<frameset>
+		<name>idle</name>
+		<top>0</top>
+		<left>0</left>
+		<height>32</height>
+		<width>34</width>
+		<columns>2</columns>
+	</frameset>
+
+	<frameset>
+		<name>attack</name>
+		<top>32</top>
+		<left>0</left>
+		<height>32</height>
+		<width>34</width>
+		<columns>2</columns>
+	</frameset>
+
+	<frameset>
+		<name>weapon</name>
+		<top>0</top>
+		<left>68</left>
+		<height>14</height>
+		<width>14</width>
+		<rows>4</rows>
+	</frameset>
+</spriteset>

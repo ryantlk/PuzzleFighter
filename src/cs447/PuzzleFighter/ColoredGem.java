@@ -68,15 +68,15 @@ abstract public class ColoredGem extends Gem {
 	private static String resource(Color color, String type) {
 		switch (color) {
 		case RED:
-			return PuzzleFighter.SPRITE_SHEET + "#red" + type;
+			return PuzzleFighter.GEM_SHEET + "#red" + type;
 		case GREEN:
-			return PuzzleFighter.SPRITE_SHEET + "#green" + type;
+			return PuzzleFighter.GEM_SHEET + "#green" + type;
 		case BLUE:
-			return PuzzleFighter.SPRITE_SHEET + "#blue" + type;
+			return PuzzleFighter.GEM_SHEET + "#blue" + type;
 		case YELLOW:
-			return PuzzleFighter.SPRITE_SHEET + "#yellow" + type;
+			return PuzzleFighter.GEM_SHEET + "#yellow" + type;
 		default:
-			return PuzzleFighter.SPRITE_SHEET + "#red" + type;
+			return PuzzleFighter.GEM_SHEET + "#red" + type;
 		}
 	}
 }

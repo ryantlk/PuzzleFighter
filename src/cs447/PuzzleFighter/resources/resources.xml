@@ -1,6 +1,10 @@
 <resources>
 	<spritesheet>
 		<imagesrc>gems.png</imagesrc>
-		<framesrc>sprites.xml</framesrc>
+		<framesrc>gems.xml</framesrc>
+	</spritesheet>
+	<spritesheet>
+		<imagesrc>cutman.png</imagesrc>
+		<framesrc>cutman.xml</framesrc>
 	</spritesheet>
 </resources>

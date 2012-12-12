@@ -2,7 +2,7 @@ package cs447.PuzzleFighter;
 
 public class WallGem extends Gem {
 	public WallGem() {
-		super(PuzzleFighter.SPRITE_SHEET + "#redPower");
+		super(PuzzleFighter.GEM_SHEET + "#redPower");
 	}
 
 	public int crash(Color color, boolean initialCrash) {
