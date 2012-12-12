@@ -344,6 +344,8 @@ public class PlayField {
 									grid[i][j] = new Diamond(this, new Vector2D(j, i), Color.RED);
 								}else if(pack.grid[i][j].type.contentEquals("Power")){
 									grid[i][j] = new PowerGem(this, new Vector2D(j, i), pack.grid[i][j].color);
+									((PowerGem)grid[i][j]).gemHeight = pack.grid[i][j].height;
+									((PowerGem)grid[i][j]).gemWidth = pack.grid[i][j].width;
 								}else{
 									grid[i][j] = new TimerGem(this, new Vector2D(j, i), pack.grid[i][j].color);
 									((TimerGem)grid[i][j]).setFrame(pack.grid[i][j].frame);
