@@ -22,6 +22,7 @@ public class PlayField {
 	public static final Gem WALL = new WallGem();
 	private final Vector2D START_TOP;
 	private final Vector2D START_BOT;
+	public GemPair previewgem;
 
 	private final static Color[] colors = new Color[] { Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW };
 	private Random randSrc = new Random();
@@ -75,7 +76,12 @@ public class PlayField {
 		START_BOT = START_TOP.translate(DOWN);
 
 		if(socket == null){
-			this.cursor = new GemPair(randomGem(START_BOT), new PowerGem(this, START_TOP, Color.RED));
+			this.cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
+			if(secondary){
+				previewgem = new GemPair(randomGem(new Vector2D(-2, 8)), randomGem(new Vector2D(-2, 7)));
+			}else{
+				previewgem = new GemPair(randomGem(new Vector2D(7, 8)), randomGem(new Vector2D(7, 7)));
+			}
 		}
 		else {
 			OutputStream os = socket.getOutputStream();
@@ -103,6 +109,9 @@ public class PlayField {
 					g.render(rc);
 				}
 			}
+		}
+		if(previewgem != null){
+			previewgem.render(rc);
 		}
 		if (cursor != null) {
 			cursor.render(rc);
@@ -286,7 +295,15 @@ public class PlayField {
 					if(ref(START_BOT) != null){
 						tmp = -1;
 					}else{
-						cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
+						//cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
+						cursor = previewgem;
+						previewgem.gem1.pos = START_BOT;
+						previewgem.gem2.pos = START_TOP;
+						if(secondary){
+							previewgem = new GemPair(randomGem(new Vector2D(-2, 8)), randomGem(new Vector2D(-2, 7)));
+						}else{
+							previewgem = new GemPair(randomGem(new Vector2D(7, 8)), randomGem(new Vector2D(7, 7)));
+						}
 					}
 					
 					if(socket != null){

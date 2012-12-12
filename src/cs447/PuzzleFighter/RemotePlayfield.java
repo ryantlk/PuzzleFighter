@@ -20,6 +20,7 @@ public class RemotePlayfield extends PlayField {
 
 		this.fighter = !secondary ? new CutMan() : new MegaMan();
 		this.cursor = null;
+		this.previewgem = null;
 	}
 
 	public int update(long deltaMs, boolean down, boolean left, boolean right, boolean ccw, boolean cw) {
