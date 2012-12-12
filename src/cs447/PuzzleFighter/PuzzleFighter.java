@@ -32,21 +32,14 @@ public class PuzzleFighter extends StaticScreenGame {
 	public PuzzleFighter() throws IOException {
 		super(width, height, false);
 		connect();
-		/*try {
-			socket.close();
-		} catch (IOException ex) {
-			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		try {
-			serv.close();
-		} catch (IOException ex) {
-			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
-		}*/
 
 		ResourceFactory.getFactory().loadResources(RSC_PATH, "resources.xml");
 
+		// socket = null;
+		// pfRight = new PlayField(6, 13, socket, true);
+
 		pfLeft = new PlayField(6, 13, socket, false);
-		pfRight = new PlayField(6, 13, socket, true);
+		pfRight = new RemotePlayfield(6, 13, socket);
 	}
 
 	public void render(RenderingContext rc) {
@@ -79,8 +72,8 @@ public class PuzzleFighter extends StaticScreenGame {
 	
 	public void connect(){
 		try {
-			//socket = new Socket("71.193.145.84", 50623);
-			socket = new Socket("192.168.1.148", 50623);
+			socket = new Socket("71.193.145.84", 50623);
+			//socket = new Socket("127.0.0.1", 50623);
 		} catch (UnknownHostException ex) {
 			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {
