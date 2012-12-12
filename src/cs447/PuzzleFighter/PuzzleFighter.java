@@ -1,6 +1,7 @@
 package cs447.PuzzleFighter;
 
 
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jig.engine.FontResource;
 
 import jig.engine.RenderingContext;
 import jig.engine.ResourceFactory;
@@ -78,6 +80,13 @@ public class PuzzleFighter extends StaticScreenGame {
 			rc.setTransform(RIGHT_TRANSFORM);
 			pfRight.render(rc);
 			return;
+		}else{
+			FontResource font = ResourceFactory.getFactory().getFontResource(new Font("Sans Serif", Font.BOLD, 30),
+			java.awt.Color.red, null );
+			font.render("Puzzle Fighter", rc, AffineTransform.getTranslateInstance(280, 100));
+			font.render("1 - local multiplayer", rc, AffineTransform.getTranslateInstance(280, 150));
+			font.render("2 - remote host", rc, AffineTransform.getTranslateInstance(280, 200));
+			font.render("3 - remote client", rc, AffineTransform.getTranslateInstance(280, 250));
 		}
 	}
 
