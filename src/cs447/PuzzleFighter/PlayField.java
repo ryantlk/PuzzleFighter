@@ -281,10 +281,14 @@ public class PlayField {
 					return 0;
 				}
 				else {
-					cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
-					//cursor = new GemPair(new PowerGem(this, START_BOT, Color.RED), new PowerGem(this, START_TOP, Color.RED));
 					int tmp = turnScore;
 					turnScore = 0;
+					if(ref(START_BOT) != null){
+						tmp = -1;
+					}else{
+						cursor = new GemPair(randomGem(START_BOT), randomGem(START_TOP));
+					}
+					
 					if(socket != null){
 						try {
 							oos.writeInt(1);
@@ -342,6 +346,16 @@ public class PlayField {
 			oos.writeObject(thepacket);
 		} catch (IOException ex) {
 			Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
+	public void close(){
+		if(oos != null){
+			try {
+				oos.close();
+			} catch (IOException ex) {
+				Logger.getLogger(PlayField.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 }

@@ -67,4 +67,13 @@ public class RemotePlayfield extends PlayField {
 		}
 		return 0;
 	}
+	
+	public void close(){
+		super.close();
+		try {
+			ois.close();
+		} catch (IOException ex) {
+			Logger.getLogger(RemotePlayfield.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 }

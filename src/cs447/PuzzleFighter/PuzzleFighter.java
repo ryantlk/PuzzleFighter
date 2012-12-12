@@ -87,14 +87,28 @@ public class PuzzleFighter extends StaticScreenGame {
 			boolean right1 = keyboard.isPressed(KeyEvent.VK_D);
 			boolean ccw1 = keyboard.isPressed(KeyEvent.VK_Q);
 			boolean cw1 = keyboard.isPressed(KeyEvent.VK_E);
-			pfRight.garbage += pfLeft.update(deltaMs, down1, left1, right1, ccw1, cw1);
+			int garbage = pfLeft.update(deltaMs, down1, left1, right1, ccw1, cw1);
+			pfRight.garbage += garbage;
 
 			boolean down2 = keyboard.isPressed(KeyEvent.VK_K);
 			boolean left2 = keyboard.isPressed(KeyEvent.VK_J);
 			boolean right2 = keyboard.isPressed(KeyEvent.VK_L);
 			boolean ccw2 = keyboard.isPressed(KeyEvent.VK_U);
 			boolean cw2 = keyboard.isPressed(KeyEvent.VK_O);
-			pfLeft.garbage += pfRight.update(deltaMs, down2, left2, right2, ccw2, cw2);
+			int garbage2 = pfRight.update(deltaMs, down2, left2, right2, ccw2, cw2);
+			pfLeft.garbage += garbage;
+			if(garbage2 == -1 || garbage == -1){
+				pfLeft.close();
+				pfRight.close();
+				playing = false;
+				if(socket != null){
+					try {
+						socket.close();
+					} catch (IOException ex) {
+						Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+			}
 			return;
 		}
 		
@@ -140,11 +154,8 @@ public class PuzzleFighter extends StaticScreenGame {
 	public void host(){
 		try {
 			serv = new ServerSocket(50623);
-		} catch (IOException ex) {
-			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		try {
 			socket = serv.accept();
+			serv.close();
 		} catch (IOException ex) {
 			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
 		}
