@@ -12,5 +12,6 @@ import java.io.Serializable;
  */
 public class Packet implements Serializable{
 	int garbage;
+	boolean attacking;
 	SerializableGem grid[][];
 }
