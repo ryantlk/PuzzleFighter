@@ -79,7 +79,7 @@ public class PuzzleFighter extends StaticScreenGame {
 	
 	public void connect(){
 		try {
-			socket = new Socket("127.0.0.1", 50623);
+			socket = new Socket("192.168.1.148", 50623);
 		} catch (UnknownHostException ex) {
 			Logger.getLogger(PuzzleFighter.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {
