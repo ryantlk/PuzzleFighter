@@ -10,10 +10,14 @@ public class PowerGem extends ColoredGem {
 	int gemWidth;
 	int gemHeight;
 
-	public PowerGem(PlayField pf, Vector2D pos, Color color) {
+	public PowerGem(PlayField pf, Vector2D pos, Color color, int gemWidth, int gemHeight) {
 		super(pf, pos, color, "Power");
-		this.gemWidth = 1;
-		this.gemHeight = 1;
+		this.gemWidth = gemWidth;
+		this.gemHeight = gemHeight;
+	}
+
+	public PowerGem(PlayField pf, Vector2D pos, Color color) {
+		this(pf, pos, color, 1, 1);
 	}
 
 	public void render(RenderingContext rc) {
