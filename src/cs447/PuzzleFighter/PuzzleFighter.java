@@ -106,7 +106,7 @@ public class PuzzleFighter extends StaticScreenGame {
 			boolean ccw2 = keyboard.isPressed(KeyEvent.VK_U);
 			boolean cw2 = keyboard.isPressed(KeyEvent.VK_O);
 			int garbage2 = pfRight.update(deltaMs, down2, left2, right2, ccw2, cw2);
-			pfLeft.garbage += garbage;
+			pfLeft.garbage += garbage2;
 			if(garbage2 == -1 || garbage == -1){
 				pfLeft.close();
 				pfRight.close();
