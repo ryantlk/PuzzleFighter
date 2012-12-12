@@ -15,8 +15,13 @@ import jig.engine.ResourceFactory;
 import jig.engine.hli.StaticScreenGame;
 
 public class PuzzleFighter extends StaticScreenGame {
-	public final static int height = 416;
-	public final static int width = 700;
+	final static double SCALE = 1.0;
+
+	AffineTransform LEFT_TRANSFORM;
+	AffineTransform RIGHT_TRANSFORM;
+
+	public final static int height = (int) (416 * SCALE);
+	public final static int width = (int) (700 * SCALE);
 
 	private PlayField pfLeft;
 	private PlayField pfRight;
@@ -39,6 +44,10 @@ public class PuzzleFighter extends StaticScreenGame {
 	public PuzzleFighter() throws IOException {
 		super(width, height, false);
 		ResourceFactory.getFactory().loadResources(RSC_PATH, "resources.xml");
+
+		LEFT_TRANSFORM = AffineTransform.getScaleInstance(SCALE, SCALE);
+		RIGHT_TRANSFORM = (AffineTransform) LEFT_TRANSFORM.clone();
+		RIGHT_TRANSFORM.translate(508, 0);
 	}
 
 	private void localMultiplayer() throws IOException {
@@ -64,8 +73,9 @@ public class PuzzleFighter extends StaticScreenGame {
 	public void render(RenderingContext rc) {
 		super.render(rc);
 		if (playing) {
+			rc.setTransform(LEFT_TRANSFORM);
 			pfLeft.render(rc);
-			rc.setTransform(AffineTransform.getTranslateInstance(508, 0));
+			rc.setTransform(RIGHT_TRANSFORM);
 			pfRight.render(rc);
 			return;
 		}
